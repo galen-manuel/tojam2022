@@ -1,2 +1,2 @@
-# tojam2022
-ToJam 2022 Game
+# TO Jam 2022
+TO Jam 2022 Game
