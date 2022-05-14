@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     {
         _input.Set(Input.GetAxis($"{ControlType}_Horizontal"), Input.GetAxis($"{ControlType}_Vertical"));
 
-        DoPhysics();
+        Move();
     }
 
     private void FixedUpdate()
@@ -42,11 +42,11 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    private void DoPhysics()
+    private void Move()
     {
         _rb.velocity = _input * BaseMovementSpeed;
         _clampedPosition.Set(Mathf.Clamp(_rb.position.x, WorldController.WORLD_BOUNDS.x, WorldController.WORLD_BOUNDS.y),
             Mathf.Clamp(_rb.position.y, WorldController.WORLD_BOUNDS.z, WorldController.WORLD_BOUNDS.w));
-        _rb.position = _clampedPosition;
+        _rb.transform.position = _clampedPosition;
     }
 }
