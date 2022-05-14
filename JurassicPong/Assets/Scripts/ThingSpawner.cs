@@ -42,6 +42,8 @@ public class ThingSpawner : MonoBehaviour
         {
             Thing thing = Instantiate(ThingPrefab, new Vector2(transform.position.x,
             Random.Range(WorldController.WORLD_BOUNDS.z, WorldController.WORLD_BOUNDS.w)), Quaternion.identity);
+            thing.tag = Random.Range(0, 2) == 0 ? Constants.TAG_GOOD_THING : Constants.TAG_BAD_THING;
+            thing.GetComponent<SpriteRenderer>().color = thing.tag == Constants.TAG_GOOD_THING ? Color.green : Color.black;
             var dir = Random.insideUnitCircle;
             switch (Controls)
             {
