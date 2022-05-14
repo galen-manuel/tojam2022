@@ -102,17 +102,18 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(1);
             _timeRemaining -= 1;
             GameTimeTick?.Invoke(_timeRemaining);
-        }
 
-        if (_timeRemaining <= PointsMultiplierTime && !_isPointsMultiplierActive)
-        {
-            _isPointsMultiplierActive = true;
-            _activePointsMultiplier = PointsMultiplier;
-            ScoreMulitplierActivated?.Invoke();
+            if (_timeRemaining <= PointsMultiplierTime && !_isPointsMultiplierActive)
+            {
+                _isPointsMultiplierActive = true;
+                _activePointsMultiplier = PointsMultiplier;
+                ScoreMulitplierActivated?.Invoke();
+            }
         }
 
         if (_timeRemaining == 0)
         {
+            Debug.Log("GAME OVER!");
             GameEnded?.Invoke();
         }
     }
