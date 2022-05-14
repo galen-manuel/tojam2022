@@ -41,3 +41,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Things
+    uniqueID: 3204586319
+    locked: 0
