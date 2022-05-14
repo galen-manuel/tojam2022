@@ -547,6 +547,7 @@ RectTransform:
   m_Children:
   - {fileID: 195166822}
   - {fileID: 787341549}
+  - {fileID: 1516884737}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -892,6 +893,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2974648439800881892, guid: a4d21b62454ce844ebf1e2e493d66a6a, type: 3}
+      propertyPath: PlayerType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2974648439800881892, guid: a4d21b62454ce844ebf1e2e493d66a6a, type: 3}
+      propertyPath: ControlType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1020849431398313365, guid: a4d21b62454ce844ebf1e2e493d66a6a, type: 3}
       propertyPath: m_Name
       value: Player2
