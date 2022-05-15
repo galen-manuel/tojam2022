@@ -62,7 +62,7 @@ MonoBehaviour:
   _tweenTime: 0.75
   _easeType: 31
   _scoringPropertiesData: {fileID: 11400000, guid: 898d98a0cc247b54c8e05df630e3c9af, type: 2}
-  _juiceItOrLoseIt: 0
+  _juiceItOrLoseIt: 1
 --- !u!1 &4609648095400422896
 GameObject:
   m_ObjectHideFlags: 0
