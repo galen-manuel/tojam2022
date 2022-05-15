@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
 
     private void Unsubscribe()
     {
-        Messenger.AddListener(Events.GAME_OVER, OnGameOver);
+        Messenger.RemoveListener(Events.GAME_OVER, OnGameOver);
     }
 
     private void Move()
