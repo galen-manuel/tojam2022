@@ -69,12 +69,12 @@ public class WorldController : MonoBehaviour
 
     private void Subscribe()
     {
-        Messenger.AddListener<Portal.Side, int, Thing>(Constants.EVENT_UPDATE_SEAM_POSITION, OnPlayerScored);
+        Messenger.AddListener<Portal.Side, int, Thing>(Events.UPDATE_SEAM_POSITION, OnPlayerScored);
     }
 
     private void Unsubscribe()
     {
-        Messenger.RemoveListener<Portal.Side, int, Thing>(Constants.EVENT_UPDATE_SEAM_POSITION, OnPlayerScored);
+        Messenger.RemoveListener<Portal.Side, int, Thing>(Events.UPDATE_SEAM_POSITION, OnPlayerScored);
     }
 
     private int CalculateDirection(Portal.Side side, Thing thing)

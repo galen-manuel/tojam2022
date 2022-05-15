@@ -21,12 +21,12 @@ public class Portal : MonoBehaviour
 
     private void Subscribe()
     {
-        Messenger.AddListener(Constants.EVENT_GAME_OVER, OnGameOver);
+        Messenger.AddListener(Events.GAME_OVER, OnGameOver);
     }
 
     private void Unsubscribe()
     {
-        Messenger.RemoveListener(Constants.EVENT_GAME_OVER, OnGameOver);
+        Messenger.RemoveListener(Events.GAME_OVER, OnGameOver);
     }
 
     #region Event Handlers
@@ -36,8 +36,8 @@ public class Portal : MonoBehaviour
         var thing = collision.transform.root.GetComponent<Thing>();
         if (thing)
         {
-            Messenger.Broadcast(Constants.EVENT_PORTAL_SCORED, WorldSide, thing, MessengerMode.REQUIRE_LISTENER);
-            Messenger.Broadcast(Constants.EVENT_DESTROY_THING, thing, MessengerMode.REQUIRE_LISTENER);
+            Messenger.Broadcast(Events.PORTAL_SCORED, WorldSide, thing, MessengerMode.REQUIRE_LISTENER);
+            Messenger.Broadcast(Events.DESTROY_THING, thing, MessengerMode.REQUIRE_LISTENER);
         }
     }
 

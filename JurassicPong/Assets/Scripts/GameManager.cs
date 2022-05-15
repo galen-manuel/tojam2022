@@ -54,14 +54,14 @@ public class GameManager : MonoBehaviour
 
     private void Subscribe()
     {
-        Messenger.AddListener<Portal.Side, Thing>(Constants.EVENT_PORTAL_SCORED, OnScored);
-        Messenger.AddListener(Constants.EVENT_GAME_OVER_ANIMATION_COMPLETE, OnGameOverAnimationComplete);
+        Messenger.AddListener<Portal.Side, Thing>(Events.PORTAL_SCORED, OnScored);
+        Messenger.AddListener(Events.GAME_OVER_ANIMATION_COMPLETE, OnGameOverAnimationComplete);
     }
 
     private void Unsubscribe()
     {
-        Messenger.RemoveListener<Portal.Side, Thing>(Constants.EVENT_PORTAL_SCORED, OnScored);
-        Messenger.RemoveListener(Constants.EVENT_GAME_OVER_ANIMATION_COMPLETE, OnGameOverAnimationComplete);
+        Messenger.RemoveListener<Portal.Side, Thing>(Events.PORTAL_SCORED, OnScored);
+        Messenger.RemoveListener(Events.GAME_OVER_ANIMATION_COMPLETE, OnGameOverAnimationComplete);
     }
 
     #endregion
@@ -74,19 +74,19 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
             _timeRemaining -= 1;
-            Messenger.Broadcast(Constants.EVENT_GAME_TIME_TICK, _timeRemaining, MessengerMode.REQUIRE_LISTENER);
+            Messenger.Broadcast(Events.GAME_TIME_TICK, _timeRemaining, MessengerMode.REQUIRE_LISTENER);
 
             if (_timeRemaining <= PointsMultiplierTime && !_isPointsMultiplierActive)
             {
                 _isPointsMultiplierActive = true;
                 _activePointsMultiplier = PointsMultiplier;
-                Messenger.Broadcast(Constants.EVENT_SCORE_MULTIPLIER_ACTIVATED, MessengerMode.REQUIRE_LISTENER);
+                Messenger.Broadcast(Events.SCORE_MULTIPLIER_ACTIVATED, MessengerMode.REQUIRE_LISTENER);
             }
         }
 
         if (_timeRemaining == 0)
         {
-            Messenger.Broadcast(Constants.EVENT_GAME_OVER);
+            Messenger.Broadcast(Events.GAME_OVER);
         }
     }
 
@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
                 throw new ArgumentOutOfRangeException(nameof(side));
         }
 
-        Messenger.Broadcast(Constants.EVENT_UPDATE_SEAM_POSITION, side, delta, thing, MessengerMode.REQUIRE_LISTENER);
+        Messenger.Broadcast(Events.UPDATE_SEAM_POSITION, side, delta, thing, MessengerMode.REQUIRE_LISTENER);
     }
 
     private void OnGameOverAnimationComplete()
@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
             PlayerOneOverallProgress = CalculateProgress(_playerOneScore, _playerTwoScore),
             PlayerTwoOverallProgress = CalculateProgress(_playerTwoScore, _playerOneScore)
         };
-        Messenger.Broadcast(Constants.EVENTS_GAME_OVER_RESULTS, roundResultsModel, MessengerMode.REQUIRE_LISTENER);
+        Messenger.Broadcast(Events.GAME_OVER_RESULTS, roundResultsModel, MessengerMode.REQUIRE_LISTENER);
     }
 
     private void OnDestroy()

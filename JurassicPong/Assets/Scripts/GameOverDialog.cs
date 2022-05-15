@@ -34,7 +34,7 @@ public class GameOverDialog : MonoBehaviour
 
     private void Subscribe()
     {
-        Messenger.AddListener<RoundResultsModel>(Constants.EVENTS_GAME_OVER_RESULTS, OnResultsTallied);
+        Messenger.AddListener<RoundResultsModel>(Events.GAME_OVER_RESULTS, OnResultsTallied);
     }
 
     private void OnResultsTallied(RoundResultsModel resultsModel)
@@ -54,7 +54,7 @@ public class GameOverDialog : MonoBehaviour
 
     private void Unsubscribe()
     {
-        Messenger.RemoveListener<RoundResultsModel>(Constants.EVENTS_GAME_OVER_RESULTS, OnResultsTallied);
+        Messenger.RemoveListener<RoundResultsModel>(Events.GAME_OVER_RESULTS, OnResultsTallied);
     }
 
     private void OnDestroy()

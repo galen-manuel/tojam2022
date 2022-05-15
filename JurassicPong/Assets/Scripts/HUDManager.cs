@@ -41,16 +41,16 @@ public class HUDManager : MonoBehaviour
 
     private void Subscribe()
     {
-        Messenger.AddListener<int>(Constants.EVENT_GAME_TIME_TICK, OnGameTimeTick);
-        Messenger.AddListener(Constants.EVENT_SCORE_MULTIPLIER_ACTIVATED, OnScoreMultiplierActivated);
-        Messenger.AddListener(Constants.EVENT_GAME_OVER, OnGameEnded);
+        Messenger.AddListener<int>(Events.GAME_TIME_TICK, OnGameTimeTick);
+        Messenger.AddListener(Events.SCORE_MULTIPLIER_ACTIVATED, OnScoreMultiplierActivated);
+        Messenger.AddListener(Events.GAME_OVER, OnGameEnded);
     }
 
     private void Unsubscribe()
     {
-        Messenger.RemoveListener<int>(Constants.EVENT_GAME_TIME_TICK, OnGameTimeTick);
-        Messenger.RemoveListener(Constants.EVENT_SCORE_MULTIPLIER_ACTIVATED, OnScoreMultiplierActivated);
-        Messenger.RemoveListener(Constants.EVENT_GAME_OVER, OnGameEnded);
+        Messenger.RemoveListener<int>(Events.GAME_TIME_TICK, OnGameTimeTick);
+        Messenger.RemoveListener(Events.SCORE_MULTIPLIER_ACTIVATED, OnScoreMultiplierActivated);
+        Messenger.RemoveListener(Events.GAME_OVER, OnGameEnded);
     }
 
     #endregion

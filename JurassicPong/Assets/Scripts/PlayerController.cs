@@ -52,12 +52,12 @@ public class PlayerController : MonoBehaviour
 
     private void Subscribe()
     {
-        Messenger.AddListener(Constants.EVENT_GAME_OVER, OnGameOver);
+        Messenger.AddListener(Events.GAME_OVER, OnGameOver);
     }
 
     private void Unsubscribe()
     {
-        Messenger.AddListener(Constants.EVENT_GAME_OVER, OnGameOver);
+        Messenger.AddListener(Events.GAME_OVER, OnGameOver);
     }
 
     private void Move()

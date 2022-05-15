@@ -44,14 +44,14 @@ public class ThingSpawner : MonoBehaviour
 
     private void Subscribe()
     {
-        Messenger.AddListener<Thing>(Constants.EVENT_DESTROY_THING, OnDestroyThing);
-        Messenger.AddListener(Constants.EVENT_GAME_OVER, OnGameOver);
+        Messenger.AddListener<Thing>(Events.DESTROY_THING, OnDestroyThing);
+        Messenger.AddListener(Events.GAME_OVER, OnGameOver);
     }
 
     private void Unsubscribe()
     {
-        Messenger.RemoveListener<Thing>(Constants.EVENT_DESTROY_THING, OnDestroyThing);
-        Messenger.RemoveListener(Constants.EVENT_GAME_OVER, OnGameOver);
+        Messenger.RemoveListener<Thing>(Events.DESTROY_THING, OnDestroyThing);
+        Messenger.RemoveListener(Events.GAME_OVER, OnGameOver);
     }
 
     private IEnumerator Spawn()
@@ -153,7 +153,7 @@ public class ThingSpawner : MonoBehaviour
 
     private void OnGameOverAnimationComplete()
     {
-        Messenger.Broadcast(Constants.EVENT_GAME_OVER_ANIMATION_COMPLETE, MessengerMode.REQUIRE_LISTENER);
+        Messenger.Broadcast(Events.GAME_OVER_ANIMATION_COMPLETE, MessengerMode.REQUIRE_LISTENER);
     }
 
     private void OnDestroy()
