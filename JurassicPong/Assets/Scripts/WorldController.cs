@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class WorldController : MonoBehaviour
 {
+
     #region Constants
 
     /// <summary>
@@ -26,6 +27,7 @@ public class WorldController : MonoBehaviour
     [SerializeField] private RectTransform _backgroundCanvas;
     [SerializeField] private Image _leftWorldBackground;
     [SerializeField] private Image _rightWorldBackground;
+    [SerializeField] private Image _worldSeamGlow;
     [SerializeField] private Image _worldSeam;
     [SerializeField] private Transform _worldSeamCollider;
 
@@ -36,13 +38,32 @@ public class WorldController : MonoBehaviour
     [Header("Scoring Properties Data")]
     [SerializeField] private ScoringPropertiesData _scoringPropertiesData;
 
+    [Space]
+    [SerializeField] private bool _juiceItOrLoseIt;
+
+    private PreviousTweenEndData _previousTweenEndData;
+
     #endregion
+
+    public Vector3 Alpha 
+    { 
+        get { return new Vector3(_worldSeamGlow.color.a, 0f, 0f); }
+        set 
+        { 
+            
+            _worldSeamGlow.color = new Color(_worldSeamGlow.color.r, 
+                                             _worldSeamGlow.color.g, 
+                                             _worldSeamGlow.color.b, 
+                                             value.x);  
+        }
+    }
 
     private void Awake()
     {
         GameHelper.IsNull(_backgroundCanvas);
         GameHelper.IsNull(_leftWorldBackground);
         GameHelper.IsNull(_rightWorldBackground);
+        GameHelper.IsNull(_worldSeamGlow);
         GameHelper.IsNull(_worldSeam);
         GameHelper.IsNull(_worldSeamCollider);
         GameHelper.IsNull(_scoringPropertiesData);
@@ -55,6 +76,9 @@ public class WorldController : MonoBehaviour
         _worldSeam.rectTransform.DOShakeScale(3.0f, new Vector3(0.1f, 0f, 0f), 15, 20, false)
                                 .SetLoops(-1)
                                 .SetId(TWEEN_ID_SEAM_SHAKE);
+        DOTween.Shake(() => Alpha, a => Alpha = a, 3.0f, 0.15f, 10, 15, fadeOut: false)
+               .SetLoops(-1)
+               .SetId(TWEEN_ID_SEAM_SHAKE);
     }
 
     #region Private Methods
@@ -89,6 +113,14 @@ public class WorldController : MonoBehaviour
         UpdateWorldBackground(side, movementDelta, thing);
     }
 
+    private struct PreviousTweenEndData
+    {
+        public float WorldSeamEndXValue;
+        public float WorldSeamColliderEndXValue;
+        public float LeftEndFillValue;
+        public float RightEndFillValue;
+    }
+
     private void UpdateWorldBackground(Portal.Side side, float movementDelta, Thing thing)
     {
         DOTween.Kill(TWEEN_ID_SEAM_MOVE);
@@ -99,28 +131,55 @@ public class WorldController : MonoBehaviour
         int direction = CalculateDirection(side, thing);
 
         // Calculate the percentage delta that the world seam and collider will move.
-        float worldSeamDeltaX = _backgroundCanvas.sizeDelta.x * movementDelta;
-        float worldSeamColliderDeltaX = WORLD_BOUNDS.y * movementDelta;
+        //_previousTweenEndData = new PreviousTweenEndData()
+        //{
 
-        // Apply the delta in the direction calculated using tweens.
-        float endFillValue = _leftWorldBackground.fillAmount + (movementDelta * direction);
-        _leftWorldBackground.DOFillAmount(endFillValue, _tweenTime)
-                            .SetEase(_easeType)
-                            .SetId(TWEEN_ID_SEAM_MOVE);
-        _worldSeam.rectTransform.DOAnchorPosX(worldSeamDeltaX * direction, _tweenTime)
-                                .SetRelative()
+        //};
+        float worldSeamXDelta = _backgroundCanvas.sizeDelta.x * movementDelta * direction;
+        float worldSeamEndXValue = _worldSeam.rectTransform.anchoredPosition.x + worldSeamXDelta;
+
+        float worldSeamColliderXDelta = WORLD_BOUNDS.y * movementDelta * direction;
+        float worldSeamColliderEndXValue = _worldSeamCollider.transform.position.x + worldSeamColliderXDelta;
+
+        float leftFillDelta = movementDelta * direction;
+        float leftEndFill = _leftWorldBackground.fillAmount + leftFillDelta;
+
+        float rightFillDelta = movementDelta * (direction * -1);
+        float rightEndFill = _rightWorldBackground.fillAmount + rightFillDelta;
+
+        if (_juiceItOrLoseIt)
+        {
+            // Apply the delta in the direction calculated using tweens.
+            _leftWorldBackground.DOFillAmount(leftEndFill, _tweenTime)
                                 .SetEase(_easeType)
                                 .SetId(TWEEN_ID_SEAM_MOVE);
-        _worldSeamCollider.transform.DOMoveX(worldSeamColliderDeltaX * direction, _tweenTime)
-                                    .SetRelative()
+            _worldSeam.rectTransform.DOAnchorPosX(worldSeamEndXValue, _tweenTime)
                                     .SetEase(_easeType)
                                     .SetId(TWEEN_ID_SEAM_MOVE);
+            _worldSeamGlow.rectTransform.DOAnchorPosX(worldSeamEndXValue, _tweenTime)
+                                    .SetEase(_easeType)
+                                    .SetId(TWEEN_ID_SEAM_MOVE);
+            _worldSeamCollider.transform.DOMoveX(worldSeamColliderEndXValue, _tweenTime)
+                                        .SetEase(_easeType)
+                                        .SetId(TWEEN_ID_SEAM_MOVE);
 
-        // We use the inverse direction calculated because the direction is calculated relative to the left side.
-        endFillValue = _rightWorldBackground.fillAmount + (movementDelta * (direction * -1));
-        _rightWorldBackground.DOFillAmount(endFillValue, _tweenTime)
-                             .SetEase(_easeType)
-                             .SetId(TWEEN_ID_SEAM_MOVE);
+            // We use the inverse direction calculated because the direction is calculated relative to the left side.
+            _rightWorldBackground.DOFillAmount(rightEndFill, _tweenTime)
+                                 .SetEase(_easeType)
+                                 .SetId(TWEEN_ID_SEAM_MOVE);
+        }
+        else
+        {
+            _leftWorldBackground.fillAmount = leftEndFill;
+            _worldSeam.rectTransform.anchoredPosition = new Vector2(worldSeamEndXValue, 
+                                                                    _worldSeam.rectTransform.anchoredPosition.y);
+            _worldSeamGlow.rectTransform.anchoredPosition = new Vector2(worldSeamEndXValue,
+                                                                        _worldSeamGlow.rectTransform.anchoredPosition.y);
+            _worldSeamCollider.transform.position = new Vector3(worldSeamColliderEndXValue,
+                                                                _worldSeamCollider.transform.position.y,
+                                                                _worldSeamCollider.transform.position.z);
+            _rightWorldBackground.fillAmount = rightEndFill;
+        }
     }
 
     private void OnDestroy()
