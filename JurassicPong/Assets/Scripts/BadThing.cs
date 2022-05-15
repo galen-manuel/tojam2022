@@ -12,11 +12,11 @@ public class BadThing : Thing
     public void Init(PlayerController.Controls originalPlayer, 
         Vector2 startingVelocity = default)
     {
-        base.Init(startingVelocity);
-
-        _originalPlayer = originalPlayer;
         _currentSwapableIndex = Random.Range(0, SwapableGameobjects.Length);
+        _originalPlayer = originalPlayer;
         SwapableGameobjects[_currentSwapableIndex].SetActive(true);
+
+        base.Init(startingVelocity, SwapableGameobjects[_currentSwapableIndex].GetComponent<SpriteRenderer>());
     }
 
     public void Swap()

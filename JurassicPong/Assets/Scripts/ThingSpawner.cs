@@ -68,6 +68,10 @@ public class ThingSpawner : MonoBehaviour
                     Random.Range(WorldController.WORLD_BOUNDS.z,
                     WorldController.WORLD_BOUNDS.w)), Quaternion.identity);
             var dir = Random.insideUnitCircle;
+            if (dir.x < 0.1f && dir.x > -0.1f)
+            {
+                dir.x = 0.1f;
+            }
             switch (Controls)
             {
                 case PlayerController.Controls.WASD:
