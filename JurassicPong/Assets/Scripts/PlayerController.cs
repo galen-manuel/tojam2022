@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using DG.Tweening;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class PlayerController : MonoBehaviour
 {
     public enum Controls
@@ -19,13 +20,22 @@ public class PlayerController : MonoBehaviour
     public float Width;
     public float Height;
 
+    [Tooltip("The colour the player flashes when respawning.")]
+    public Color DeathFlashColour = Color.red;
+    [Tooltip("The number of times the player flashes on respawn.")]
+    public int DeathLoopCount = 5;
+    [Tooltip("The time for each loop on respawn.")]
+    public float DeathLoopTime = 0.25f;
+
     #endregion
 
     #region Private Variables
 
     private Rigidbody2D _rb;
+    private SpriteRenderer _mainRenderer;
     private Vector2 _input;
     private Vector2 _clampedPosition;
+    private Vector2 _respawnPosition;
 
     private bool _isPlayable;
 
@@ -34,7 +44,13 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _mainRenderer = GetComponent<SpriteRenderer>();
         Subscribe();
+    }
+
+    private void Start()
+    {
+        _respawnPosition = transform.position;
     }
 
     private void Update()
@@ -48,6 +64,23 @@ public class PlayerController : MonoBehaviour
 
         Move();
     }
+
+    #region Public Methods
+
+    public void Respawn()
+    {
+        _isPlayable = false;
+        _rb.velocity = Vector2.zero;
+        _input = Vector2.zero;
+        _rb.MovePosition(_respawnPosition);
+        _mainRenderer.DOColor(DeathFlashColour, DeathLoopTime).SetLoops(DeathLoopCount, LoopType.Yoyo).OnComplete(() =>
+        {
+            _mainRenderer.color = Color.white;
+            _isPlayable = true;
+        });
+    }
+
+    #endregion
 
     #region Private Methods
 
