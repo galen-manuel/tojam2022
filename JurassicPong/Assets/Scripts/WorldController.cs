@@ -25,11 +25,11 @@ public class WorldController : MonoBehaviour
 
     [Header("World Background")]
     [SerializeField] private RectTransform _backgroundCanvas;
-    [SerializeField] private Image _leftWorldBackground;
-    [SerializeField] private Image _rightWorldBackground;
-    [SerializeField] private Image _worldSeamGlow;
-    [SerializeField] private Image _worldSeam;
-    [SerializeField] private Transform _worldSeamCollider;
+    [SerializeField] private Image _leftBackground;
+    [SerializeField] private Image _rightBackground;
+    [SerializeField] private Image _seamGlow;
+    [SerializeField] private Image _seam;
+    [SerializeField] private Transform _seamCollider;
 
     [Header("Seam Tween Properties")]
     [SerializeField] private float _tweenTime = 0.75f;
@@ -47,33 +47,28 @@ public class WorldController : MonoBehaviour
 
     public Vector3 Alpha 
     { 
-        get { return new Vector3(_worldSeamGlow.color.a, 0f, 0f); }
-        set 
-        { 
-            
-            _worldSeamGlow.color = new Color(_worldSeamGlow.color.r, 
-                                             _worldSeamGlow.color.g, 
-                                             _worldSeamGlow.color.b, 
-                                             value.x);  
-        }
+        get { return new Vector3(_seamGlow.color.a, 0f, 0f); }
+        set { _seamGlow.color = new Color(_seamGlow.color.r, _seamGlow.color.g, _seamGlow.color.b, value.x); }
     }
 
     private void Awake()
     {
         GameHelper.IsNull(_backgroundCanvas);
-        GameHelper.IsNull(_leftWorldBackground);
-        GameHelper.IsNull(_rightWorldBackground);
-        GameHelper.IsNull(_worldSeamGlow);
-        GameHelper.IsNull(_worldSeam);
-        GameHelper.IsNull(_worldSeamCollider);
+        GameHelper.IsNull(_leftBackground);
+        GameHelper.IsNull(_rightBackground);
+        GameHelper.IsNull(_seamGlow);
+        GameHelper.IsNull(_seam);
+        GameHelper.IsNull(_seamCollider);
         GameHelper.IsNull(_scoringPropertiesData);
+
+        _previousTweenEndData = new PreviousTweenEndData();
 
         Subscribe();
     }
 
     private void Start()
     {
-        _worldSeam.rectTransform.DOShakeScale(3.0f, new Vector3(0.1f, 0f, 0f), 15, 20, false)
+        _seam.rectTransform.DOShakeScale(3.0f, new Vector3(0.1f, 0f, 0f), 15, 20, false)
                                 .SetLoops(-1)
                                 .SetId(TWEEN_ID_SEAM_SHAKE);
         DOTween.Shake(() => Alpha, a => Alpha = a, 3.0f, 0.15f, 10, 15, fadeOut: false)
@@ -113,12 +108,14 @@ public class WorldController : MonoBehaviour
         UpdateWorldBackground(side, movementDelta, thing);
     }
 
-    private struct PreviousTweenEndData
+    private float GetEndValue(float currentValue, float previousEndData, float newDelta)
     {
-        public float WorldSeamEndXValue;
-        public float WorldSeamColliderEndXValue;
-        public float LeftEndFillValue;
-        public float RightEndFillValue;
+        if (previousEndData == 0 || previousEndData == currentValue) 
+        {
+            return currentValue + newDelta;
+        }
+
+        return previousEndData + newDelta;
     }
 
     private void UpdateWorldBackground(Portal.Side side, float movementDelta, Thing thing)
@@ -131,54 +128,54 @@ public class WorldController : MonoBehaviour
         int direction = CalculateDirection(side, thing);
 
         // Calculate the percentage delta that the world seam and collider will move.
-        //_previousTweenEndData = new PreviousTweenEndData()
-        //{
+        float seamXDelta = _backgroundCanvas.sizeDelta.x * movementDelta * direction;
+        float seamEndX = GetEndValue(_seam.rectTransform.anchoredPosition.x, _previousTweenEndData.SeamEndX, seamXDelta);
 
-        //};
-        float worldSeamXDelta = _backgroundCanvas.sizeDelta.x * movementDelta * direction;
-        float worldSeamEndXValue = _worldSeam.rectTransform.anchoredPosition.x + worldSeamXDelta;
-
-        float worldSeamColliderXDelta = WORLD_BOUNDS.y * movementDelta * direction;
-        float worldSeamColliderEndXValue = _worldSeamCollider.transform.position.x + worldSeamColliderXDelta;
+        float seamColliderXDelta = WORLD_BOUNDS.y * movementDelta * direction;
+        float seamColliderEndX =
+            GetEndValue(_seamCollider.transform.position.x, _previousTweenEndData.SeamColliderEndX, seamColliderXDelta);
 
         float leftFillDelta = movementDelta * direction;
-        float leftEndFill = _leftWorldBackground.fillAmount + leftFillDelta;
+        float leftEndFill = GetEndValue(_leftBackground.fillAmount, _previousTweenEndData.LeftEndFill, leftFillDelta);
 
         float rightFillDelta = movementDelta * (direction * -1);
-        float rightEndFill = _rightWorldBackground.fillAmount + rightFillDelta;
+        float rightEndFill = GetEndValue(_rightBackground.fillAmount, _previousTweenEndData.RightEndFill, rightFillDelta);
 
         if (_juiceItOrLoseIt)
         {
+            // Cache the end position data in case the tweens are killed midway.
+            _previousTweenEndData.SeamEndX = seamEndX;
+            _previousTweenEndData.SeamColliderEndX = seamColliderEndX;
+            _previousTweenEndData.LeftEndFill = leftEndFill;
+            _previousTweenEndData.RightEndFill = rightEndFill;
+
             // Apply the delta in the direction calculated using tweens.
-            _leftWorldBackground.DOFillAmount(leftEndFill, _tweenTime)
+            _leftBackground.DOFillAmount(leftEndFill, _tweenTime)
+                            .SetEase(_easeType)
+                            .SetId(TWEEN_ID_SEAM_MOVE);
+            _seam.rectTransform.DOAnchorPosX(seamEndX, _tweenTime)
                                 .SetEase(_easeType)
                                 .SetId(TWEEN_ID_SEAM_MOVE);
-            _worldSeam.rectTransform.DOAnchorPosX(worldSeamEndXValue, _tweenTime)
+            _seamGlow.rectTransform.DOAnchorPosX(seamEndX, _tweenTime)
                                     .SetEase(_easeType)
                                     .SetId(TWEEN_ID_SEAM_MOVE);
-            _worldSeamGlow.rectTransform.DOAnchorPosX(worldSeamEndXValue, _tweenTime)
+            _seamCollider.transform.DOMoveX(seamColliderEndX, _tweenTime)
                                     .SetEase(_easeType)
                                     .SetId(TWEEN_ID_SEAM_MOVE);
-            _worldSeamCollider.transform.DOMoveX(worldSeamColliderEndXValue, _tweenTime)
-                                        .SetEase(_easeType)
-                                        .SetId(TWEEN_ID_SEAM_MOVE);
 
             // We use the inverse direction calculated because the direction is calculated relative to the left side.
-            _rightWorldBackground.DOFillAmount(rightEndFill, _tweenTime)
-                                 .SetEase(_easeType)
-                                 .SetId(TWEEN_ID_SEAM_MOVE);
+            _rightBackground.DOFillAmount(rightEndFill, _tweenTime)
+                            .SetEase(_easeType)
+                            .SetId(TWEEN_ID_SEAM_MOVE);
         }
         else
         {
-            _leftWorldBackground.fillAmount = leftEndFill;
-            _worldSeam.rectTransform.anchoredPosition = new Vector2(worldSeamEndXValue, 
-                                                                    _worldSeam.rectTransform.anchoredPosition.y);
-            _worldSeamGlow.rectTransform.anchoredPosition = new Vector2(worldSeamEndXValue,
-                                                                        _worldSeamGlow.rectTransform.anchoredPosition.y);
-            _worldSeamCollider.transform.position = new Vector3(worldSeamColliderEndXValue,
-                                                                _worldSeamCollider.transform.position.y,
-                                                                _worldSeamCollider.transform.position.z);
-            _rightWorldBackground.fillAmount = rightEndFill;
+            _leftBackground.fillAmount = leftEndFill;
+            _seam.rectTransform.anchoredPosition = new Vector2(seamEndX, _seam.rectTransform.anchoredPosition.y);
+            _seamGlow.rectTransform.anchoredPosition = new Vector2(seamEndX, _seamGlow.rectTransform.anchoredPosition.y);
+            _seamCollider.transform.position =
+                new Vector3(seamColliderEndX, _seamCollider.transform.position.y, _seamCollider.transform.position.z);
+            _rightBackground.fillAmount = rightEndFill;
         }
     }
 

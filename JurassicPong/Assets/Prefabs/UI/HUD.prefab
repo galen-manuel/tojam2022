@@ -662,12 +662,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1795065348121466620, guid: a2c4c5d678cce2941921d9b03668b444, type: 3}
       propertyPath: m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1795065348121466620, guid: a2c4c5d678cce2941921d9b03668b444, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+      objectReference: {fileID: 21300000, guid: ce587cc5478183d4e99d5ea69275e660, type: 3}
     - target: {fileID: 1795065348121466622, guid: a2c4c5d678cce2941921d9b03668b444, type: 3}
       propertyPath: m_Name
       value: Timer

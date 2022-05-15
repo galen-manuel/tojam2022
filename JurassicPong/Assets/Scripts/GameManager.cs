@@ -110,6 +110,7 @@ public class GameManager : MonoBehaviour
         if (_timeRemaining == 0 || scoreDifference >= _scoringPropertiesData.MaxScoreDifference)
         {
             Messenger.Broadcast(Events.GAME_OVER);
+            StopCoroutine(GameTimeTicker());
         }
     }
 

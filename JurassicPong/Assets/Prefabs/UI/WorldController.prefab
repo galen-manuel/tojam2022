@@ -54,11 +54,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _backgroundCanvas: {fileID: 0}
-  _leftWorldBackground: {fileID: 4609648097041733707}
-  _rightWorldBackground: {fileID: 4609648096327940822}
-  _worldSeamGlow: {fileID: 6530308552272299009}
-  _worldSeam: {fileID: 4609648095400422902}
-  _worldSeamCollider: {fileID: 0}
+  _leftBackground: {fileID: 4609648097041733707}
+  _rightBackground: {fileID: 4609648096327940822}
+  _seamGlow: {fileID: 6530308552272299009}
+  _seam: {fileID: 4609648095400422902}
+  _seamCollider: {fileID: 0}
   _tweenTime: 0.75
   _easeType: 31
   _scoringPropertiesData: {fileID: 11400000, guid: 898d98a0cc247b54c8e05df630e3c9af, type: 2}
