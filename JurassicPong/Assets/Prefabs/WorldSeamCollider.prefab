@@ -44,8 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1feb972e6f8902948a4f2f8faec83cd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ThingPrefab: {fileID: -8719524709629576419, guid: 42faca625dbbe044e843fa0a99bdc75a, type: 3}
+  ThingPrefabs:
+  - {fileID: -8719524709629576419, guid: 42faca625dbbe044e843fa0a99bdc75a, type: 3}
+  - {fileID: -3155384231885837278, guid: ba20f892774ccd34eb29c2d0e73d8015, type: 3}
   Controls: 0
+  SpawnVariance: 0.2
   SpawnTime: 3
   NumberToSpawn: 2
 --- !u!1 &3588995745749619400
@@ -92,8 +95,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1feb972e6f8902948a4f2f8faec83cd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ThingPrefab: {fileID: -8719524709629576419, guid: 42faca625dbbe044e843fa0a99bdc75a, type: 3}
+  ThingPrefabs:
+  - {fileID: -8719524709629576419, guid: 42faca625dbbe044e843fa0a99bdc75a, type: 3}
+  - {fileID: -3155384231885837278, guid: ba20f892774ccd34eb29c2d0e73d8015, type: 3}
   Controls: 1
+  SpawnVariance: 0.2
   SpawnTime: 3
   NumberToSpawn: 2
 --- !u!1 &8032454217562283855
@@ -106,6 +112,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8032454217562283853}
   - component: {fileID: 8032454217562283854}
+  - component: {fileID: 5926447351760412756}
   m_Layer: 0
   m_Name: WorldSeamCollider
   m_TagString: Untagged
@@ -156,3 +163,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &5926447351760412756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8032454217562283855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad78fc9cc8cf9f84ca4dbf49275a482b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

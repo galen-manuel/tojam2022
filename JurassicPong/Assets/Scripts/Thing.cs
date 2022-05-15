@@ -9,7 +9,7 @@ public class Thing : MonoBehaviour
 
     private Rigidbody2D _rb;
 
-    public void Init(Vector2 startingVelocity = default)
+    public virtual void Init(Vector2 startingVelocity = default)
     {
         if (startingVelocity == default)
         {
@@ -27,7 +27,7 @@ public class Thing : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Init();
+
     }
 
     // Update is called once per frame
