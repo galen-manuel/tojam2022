@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1efc14f938f59134ab67e22eaf6201b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _portals:
-  - {fileID: 0}
-  - {fileID: 0}
+  _scoringPropertiesData: {fileID: 11400000, guid: 898d98a0cc247b54c8e05df630e3c9af, type: 2}
+  adjustTimeScale: 0
+  timeScale: 0
   TotalMatchTime: 120
   PointsMultiplierTime: 20
   PointsMultiplier: 2

@@ -33,12 +33,8 @@ public class WorldController : MonoBehaviour
     [SerializeField] private float _tweenTime = 0.75f;
     [SerializeField] private Ease _easeType = Ease.InOutBounce;
 
-    [Header("Scoring Properties")]
-    [SerializeField] private int _maxScoreDifference = 10;
-    [SerializeField] private float _maxScreenPrecentage = 25f;
-
-    // Debug value for display in Debug Inspector.
-    private float _percentagePerPoint;
+    [Header("Scoring Properties Data")]
+    [SerializeField] private ScoringPropertiesData _scoringPropertiesData;
 
     #endregion
 
@@ -49,6 +45,7 @@ public class WorldController : MonoBehaviour
         GameHelper.IsNull(_rightWorldBackground);
         GameHelper.IsNull(_worldSeam);
         GameHelper.IsNull(_worldSeamCollider);
+        GameHelper.IsNull(_scoringPropertiesData);
 
         Subscribe();
     }
@@ -58,11 +55,6 @@ public class WorldController : MonoBehaviour
         _worldSeam.rectTransform.DOShakeScale(3.0f, new Vector3(0.1f, 0f, 0f), 15, 20, false)
                                 .SetLoops(-1)
                                 .SetId(TWEEN_ID_SEAM_SHAKE);
-    }
-
-    private void Update()
-    {
-        _percentagePerPoint = (1f / _maxScoreDifference * _maxScreenPrecentage) / 100f;
     }
 
     #region Private Methods
@@ -93,7 +85,7 @@ public class WorldController : MonoBehaviour
 
     private void OnPlayerScored(Portal.Side side, int delta, Thing thing)
     {
-        float movementDelta = ((float)delta / _maxScoreDifference * _maxScreenPrecentage) / 100f;
+        float movementDelta = ((float)delta / _scoringPropertiesData.MaxScoreDifference * _scoringPropertiesData.MaxScreenPercentage) / 100f;
         UpdateWorldBackground(side, movementDelta, thing);
     }
 

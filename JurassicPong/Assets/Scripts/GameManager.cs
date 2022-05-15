@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     #region Private Variables
 
+    [Header("Scoring Properties Data")]
+    [SerializeField] private ScoringPropertiesData _scoringPropertiesData;
     private int _playerOneScore;
     private int _playerTwoScore;
     private int _timeRemaining;
@@ -35,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        //DontDestroyOnLoad(this);
+        GameHelper.IsNull(_scoringPropertiesData);
 
         Subscribe();
 
@@ -84,10 +86,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (_timeRemaining == 0)
-        {
-            Messenger.Broadcast(Events.GAME_OVER);
-        }
+        CheckGameOver();
     }
 
     private float CalculateProgress(int score1, int score2)
@@ -98,6 +97,15 @@ public class GameManager : MonoBehaviour
         }
 
         return (float)score1 / score2;
+    }
+
+    private void CheckGameOver()
+    {
+        int scoreDifference = Mathf.Abs(_playerOneScore - _playerTwoScore);
+        if (_timeRemaining == 0 || scoreDifference >= _scoringPropertiesData.MaxScoreDifference)
+        {
+            Messenger.Broadcast(Events.GAME_OVER);
+        }
     }
 
     #endregion
@@ -136,6 +144,7 @@ public class GameManager : MonoBehaviour
         }
 
         Messenger.Broadcast(Events.UPDATE_SEAM_POSITION, side, delta, thing, MessengerMode.REQUIRE_LISTENER);
+        CheckGameOver();
     }
 
     private void OnGameOverAnimationComplete()
