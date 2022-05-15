@@ -17,6 +17,7 @@ public class HUDManager : MonoBehaviour
     [Header("HUD Elements")]
     [SerializeField] private RectTransform _gameTimer;
     [SerializeField] private TextMeshProUGUI _gameTimerText;
+    public CountdownSequence CountdownSequence;
 
     private float _timerHiddenYPosition;
 
@@ -32,15 +33,12 @@ public class HUDManager : MonoBehaviour
         Subscribe();
     }
 
-    private void Start()
-    {
-        ToggleHUD(true);
-    }
-
     #region Private Methods
 
     private void Subscribe()
     {
+        Messenger.AddListener(Events.COUNTDOWN_STARTED, OnStartCountdown);
+        Messenger.AddListener<int>(Events.START_GAME, OnStartGame);
         Messenger.AddListener<int>(Events.GAME_TIME_TICK, OnGameTimeTick);
         Messenger.AddListener(Events.SCORE_MULTIPLIER_ACTIVATED, OnScoreMultiplierActivated);
         Messenger.AddListener(Events.GAME_OVER, OnGameEnded);
@@ -48,9 +46,16 @@ public class HUDManager : MonoBehaviour
 
     private void Unsubscribe()
     {
+        Messenger.RemoveListener(Events.COUNTDOWN_STARTED, OnStartCountdown);
+        Messenger.RemoveListener<int>(Events.START_GAME, OnStartGame);
         Messenger.RemoveListener<int>(Events.GAME_TIME_TICK, OnGameTimeTick);
         Messenger.RemoveListener(Events.SCORE_MULTIPLIER_ACTIVATED, OnScoreMultiplierActivated);
         Messenger.RemoveListener(Events.GAME_OVER, OnGameEnded);
+    }
+
+    private void SetTimer(int timeRemaining)
+    {
+        _gameTimerText.text = $"{timeRemaining / 60:D2}:{timeRemaining % 60:D2}";
     }
 
     #endregion
@@ -66,9 +71,25 @@ public class HUDManager : MonoBehaviour
 
     #region Event Handlers
 
+    private void OnStartCountdown()
+    {
+        CountdownSequence.StartCountdown(OnCountdownSequenceComplete);
+    }
+
+    private void OnStartGame(int startingGameTime)
+    {
+        SetTimer(startingGameTime);
+        ToggleHUD(true);
+    }
+
+    private void OnCountdownSequenceComplete()
+    {
+        Messenger.Broadcast(Events.COUNTDOWN_ENDED);
+    }
+
     private void OnGameTimeTick(int timeRemaining)
     {
-        _gameTimerText.text = $"{timeRemaining / 60:D2}:{timeRemaining % 60:D2}";
+        SetTimer(timeRemaining);
     }
 
     private void OnScoreMultiplierActivated()
