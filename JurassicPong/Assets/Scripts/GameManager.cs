@@ -18,6 +18,12 @@ public class GameManager : MonoBehaviour
 
     #region Public Variables
 
+    [Header("DEBUG")]
+    public bool adjustTimeScale;
+    [Range(0f, 2f)]
+    public float timeScale;
+    [Space]
+
     [Tooltip("Value in seconds.")]
     public int TotalMatchTime = 3 * 60;
 
@@ -56,6 +62,11 @@ public class GameManager : MonoBehaviour
 
         _timeRemaining = TotalMatchTime;
         _activePointsMultiplier = 1;
+
+        if (adjustTimeScale)
+        {
+            Time.timeScale = timeScale;
+        }
 
         StartCoroutine(GameTimeTicker());
     }

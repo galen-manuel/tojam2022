@@ -7,16 +7,16 @@ public class Thing : MonoBehaviour
 {
     public float VelocityMultiplier;
 
-    private Rigidbody2D _rb;
+    protected Rigidbody2D _rb;
 
     public virtual void Init(Vector2 startingVelocity = default)
     {
         if (startingVelocity == default)
         {
-            startingVelocity = Random.onUnitSphere * VelocityMultiplier;
+            startingVelocity = Random.onUnitSphere;
         }
 
-        _rb.velocity = startingVelocity;
+        _rb.velocity = startingVelocity * VelocityMultiplier;
     }
 
     private void Awake()
