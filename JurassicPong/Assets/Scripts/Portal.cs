@@ -18,7 +18,7 @@ public class Portal : MonoBehaviour
         if (thing)
         {
             Scored?.Invoke(WorldSide, thing);
-            Destroy(collision.gameObject);
+            Destroy(collision.transform.root.gameObject);
         }
     }
 }
