@@ -38,6 +38,11 @@ public class GameOverDialog : MonoBehaviour
         Messenger.AddListener<RoundResultsModel>(Events.GAME_OVER_RESULTS, OnResultsTallied);
     }
 
+    private void Unsubscribe()
+    {
+        Messenger.RemoveListener<RoundResultsModel>(Events.GAME_OVER_RESULTS, OnResultsTallied);
+    }
+
     private void OnResultsTallied(RoundResultsModel resultsModel)
     {
         for (int i = 0; i < transform.childCount; i++)
@@ -53,11 +58,6 @@ public class GameOverDialog : MonoBehaviour
 
         _leftProgressBar.fillAmount = resultsModel.PlayerOneOverallProgress;
         _rightProgressBar.fillAmount = resultsModel.PlayerTwoOverallProgress;
-    }
-
-    private void Unsubscribe()
-    {
-        Messenger.RemoveListener<RoundResultsModel>(Events.GAME_OVER_RESULTS, OnResultsTallied);
     }
 
     private void OnDestroy()
