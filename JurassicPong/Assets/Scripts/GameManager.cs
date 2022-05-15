@@ -35,8 +35,10 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// int - Score delta
     /// <para><see cref="Portal.Side"/> - Which portal was scored on.</para>
+    /// <para><see cref="Thing"/> - What type of object was scored (<see cref="Thing"/> is a good thing, 
+    /// <see cref="BadThing"/> is not.)</para>
     /// </summary>
-    public Action<Portal.Side, int> Scored;
+    public Action<Portal.Side, int, Thing> Scored;
 
     public Action GameEnded;
     public Action ScoreMulitplierActivated;
@@ -76,21 +78,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Score(Portal.Side side, string tag, ref int playerScore)
-    {
-        // Apply the multiplier first.
-        int delta = 1 * _activePointsMultiplier;
-
-        // Make the delta negative for bad things.
-        if (tag == Constants.TAG_BAD_THING)
-        {
-            delta *= -1;
-        }
-
-        playerScore += delta;
-        Scored?.Invoke(side, delta);
-    }
-
     #endregion
 
     #region Coroutines
@@ -122,9 +109,38 @@ public class GameManager : MonoBehaviour
 
     #region Event Handlers
 
-    private void OnScored(Portal.Side side, string tag)
+    private void OnScored(Portal.Side side, Thing thing)
     {
-        Score(side, tag, ref side == Portal.Side.Left ? ref _playerOneScore : ref _playerTwoScore);
+        // Apply the multiplier first.
+        int delta = 1 * _activePointsMultiplier;
+
+        switch (side)
+        {
+            case Portal.Side.Left:
+                if (thing is BadThing)
+                {
+                    _playerTwoScore += delta;
+                }
+                else
+                {
+                    _playerOneScore += delta;
+                }
+                break;
+            case Portal.Side.Right:
+                if (thing is BadThing)
+                {
+                    _playerOneScore += delta;
+                }
+                else
+                {
+                    _playerTwoScore += delta;
+                }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(side));
+        }
+
+        Scored?.Invoke(side, delta, thing);
     }
 
     private void OnDestroy()

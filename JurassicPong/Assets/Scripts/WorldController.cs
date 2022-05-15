@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class WorldController : MonoBehaviour
 {
@@ -8,22 +9,24 @@ public class WorldController : MonoBehaviour
 
     #region Private Variables
 
-    [Header("Backgrounds")]
+    [Header("Misc")]
     [SerializeField] private GameManager _gameManager;
+
+    [Header("World Background")]
     [SerializeField] private RectTransform _backgroundCanvas;
     [SerializeField] private Image _leftWorldBackground;
     [SerializeField] private Image _rightWorldBackground;
     [SerializeField] private Image _worldSeam;
     [SerializeField] private Transform _worldSeamCollider;
+
+    [Header("Seam Tween Properties")]
+    [SerializeField] private float _tweenTime = 0.75f;
+    [SerializeField] private Ease _easeType = Ease.InOutBounce;
+
+    [Header("Scoring Properties")]
+    [SerializeField] private int _maxScoreDifference = 10;
+    [SerializeField] private float _maxScreenPrecentage = 25f;
     private float _percentagePerPoint;
-
-    #endregion
-
-    #region Public Variables
-
-    [Header("Scoring")]
-    public int MaxScoreDifference = 10;
-    public float MaxScreenPercentage = 25f;
 
     #endregion
 
@@ -42,7 +45,7 @@ public class WorldController : MonoBehaviour
 
     private void Update()
     {
-        _percentagePerPoint = (1f / MaxScoreDifference * MaxScreenPercentage) / 100f;
+        _percentagePerPoint = (1f / _maxScoreDifference * _maxScreenPrecentage) / 100f;
     }
 
     #region Private Methods
@@ -61,27 +64,48 @@ public class WorldController : MonoBehaviour
 
     #region Event Handlers
 
-    private void OnPlayerScored(Portal.Side side, int delta)
+    private void OnPlayerScored(Portal.Side side, int delta, Thing thing)
     {
-        float movementPerc = ((float)delta / MaxScoreDifference * MaxScreenPercentage) / 100f;
+        float movementDelta = ((float)delta / _maxScoreDifference * _maxScreenPrecentage) / 100f;
+        UpdateWorldBackground(side, movementDelta, thing);
+    }
 
-        switch (side)
+    private int CalculateDirection(Portal.Side side, Thing thing)
+    {
+        return side switch
         {
-            case Portal.Side.Left:
-                _leftWorldBackground.fillAmount += movementPerc;
-                _rightWorldBackground.fillAmount -= movementPerc;
-                _worldSeam.rectTransform.anchoredPosition += new Vector2(_backgroundCanvas.sizeDelta.x * movementPerc, 0f);
-                _worldSeamCollider.transform.position += new Vector3(WORLD_BOUNDS.y * movementPerc, 0f, 0f);
-                break;
-            case Portal.Side.Right:
-                _leftWorldBackground.fillAmount -= movementPerc;
-                _rightWorldBackground.fillAmount += movementPerc;
-                _worldSeam.rectTransform.anchoredPosition -= new Vector2(_backgroundCanvas.sizeDelta.x * movementPerc, 0f);
-                _worldSeamCollider.transform.position -= new Vector3(WORLD_BOUNDS.y * movementPerc, 0f, 0f);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(side));
-        }
+            Portal.Side.Left => thing is BadThing ? -1 : 1,
+            Portal.Side.Right => thing is BadThing ? 1 : -1,
+            _ => throw new ArgumentOutOfRangeException(nameof(side)),
+        };
+    }
+
+    private void UpdateWorldBackground(Portal.Side side, float movementDelta, Thing thing)
+    {
+        // Calculate direction based on the side that was scored on. If scored on the left, the direction of movement
+        // is positive relative to the left side. If scored on the right, the direction of movement is negative relative
+        // to the left side.
+        int direction = CalculateDirection(side, thing);
+
+        // Calculate the percentage delta that the world seam and collider will move.
+        var worldSeamDelta = new Vector2(_backgroundCanvas.sizeDelta.x * movementDelta, 0f);
+        var worldSeamColliderDelta = new Vector3(WORLD_BOUNDS.y * movementDelta, 0f, 0f);
+
+        // Apply the delta in the direction calculated using tweens.
+        float endFillValue = _leftWorldBackground.fillAmount + (movementDelta * direction);
+        _leftWorldBackground.DOFillAmount(endFillValue, _tweenTime)
+                            .SetEase(_easeType);
+        _worldSeam.rectTransform.DOAnchorPosX(worldSeamDelta.x * direction, _tweenTime)
+                                .SetRelative()
+                                .SetEase(_easeType);
+        _worldSeamCollider.transform.DOMoveX(worldSeamColliderDelta.x * direction, _tweenTime)
+                                    .SetRelative()
+                                    .SetEase(_easeType);
+
+        // We use the inverse direction calculated because the direction is calculated relative to the left side.
+        endFillValue = _rightWorldBackground.fillAmount + (movementDelta * (direction * -1));
+        _rightWorldBackground.DOFillAmount(endFillValue, _tweenTime)
+                             .SetEase(_easeType);
     }
 
     private void OnDestroy()

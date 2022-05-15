@@ -10,14 +10,14 @@ public class Portal : MonoBehaviour
     }
 
     public Side WorldSide;
-    public Action<Side, string> Scored;
+    public Action<Side, Thing> Scored;
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == Constants.TAG_GOOD_THING ||
-            collision.gameObject.tag == Constants.TAG_BAD_THING)
+        var thing = collision.transform.root.GetComponent<Thing>();
+        if (thing)
         {
-            Scored?.Invoke(WorldSide, collision.gameObject.tag);
+            Scored?.Invoke(WorldSide, thing);
             Destroy(collision.gameObject);
         }
     }
