@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,73 +6,88 @@ public class WorldController : MonoBehaviour
 {
     public static readonly Vector4 WORLD_BOUNDS = new Vector4(0.5f, 17.78371f, 1f, 9f);
 
+    #region Private Variables
+
     [Header("Backgrounds")]
+    [SerializeField] private GameManager _gameManager;
     [SerializeField] private RectTransform _backgroundCanvas;
     [SerializeField] private Image _leftWorldBackground;
     [SerializeField] private Image _rightWorldBackground;
     [SerializeField] private Image _worldSeam;
     [SerializeField] private Transform _worldSeamCollider;
+    private float _percentagePerPoint;
 
+    #endregion
+
+    #region Public Variables
 
     [Header("Scoring")]
     public int MaxScoreDifference = 10;
     public float MaxScreenPercentage = 25f;
 
-    private float _percentagePerPoint;
-    private float _playerOneScore;
-    private float _playerTwoScore;
+    #endregion
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
+        GameHelper.IsNull(_gameManager);
+        GameHelper.IsNull(_backgroundCanvas);
+        GameHelper.IsNull(_leftWorldBackground);
+        GameHelper.IsNull(_rightWorldBackground);
+        GameHelper.IsNull(_worldSeam);
+        GameHelper.IsNull(_worldSeamCollider);
+
+        Unsubscribe();
+        Subscribe();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         _percentagePerPoint = (1f / MaxScoreDifference * MaxScreenPercentage) / 100f;
-        // Player one score.
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            ScorePlayerOne(1);
-        }
-
-        // Player two scoring.
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            ScorePlayerTwo(1);
-        }
     }
 
-    public void ScorePlayerOne(int delta)
+    #region Private Methods
+
+    private void Subscribe()
     {
-        _playerOneScore += delta;
-        OnPlayerScored(true, delta);
+        _gameManager.Scored += OnPlayerScored;
     }
 
-    public void ScorePlayerTwo(int delta)
+    private void Unsubscribe()
     {
-        _playerTwoScore += delta;
-        OnPlayerScored(false, delta);
+        _gameManager.Scored -= OnPlayerScored;
     }
 
-    public void OnPlayerScored(bool isPlayerOne, int delta)
+    #endregion
+
+    #region Event Handlers
+
+    private void OnPlayerScored(Portal.Side side, int delta)
     {
         float movementPerc = ((float)delta / MaxScoreDifference * MaxScreenPercentage) / 100f;
-        if (isPlayerOne)
+
+        switch (side)
         {
-            _leftWorldBackground.fillAmount += movementPerc;
-            _rightWorldBackground.fillAmount -= movementPerc;
-            _worldSeam.rectTransform.anchoredPosition += new Vector2(_backgroundCanvas.sizeDelta.x * movementPerc, 0f);
-            _worldSeamCollider.transform.position += new Vector3(WORLD_BOUNDS.y * movementPerc, 0f, 0f);
-        }
-        else
-        {
-            _leftWorldBackground.fillAmount -= movementPerc;
-            _rightWorldBackground.fillAmount += movementPerc;
-            _worldSeam.rectTransform.anchoredPosition -= new Vector2(_backgroundCanvas.sizeDelta.x * movementPerc, 0f);
-            _worldSeamCollider.transform.position -= new Vector3(WORLD_BOUNDS.y * movementPerc, 0f, 0f);
+            case Portal.Side.Left:
+                _leftWorldBackground.fillAmount += movementPerc;
+                _rightWorldBackground.fillAmount -= movementPerc;
+                _worldSeam.rectTransform.anchoredPosition += new Vector2(_backgroundCanvas.sizeDelta.x * movementPerc, 0f);
+                _worldSeamCollider.transform.position += new Vector3(WORLD_BOUNDS.y * movementPerc, 0f, 0f);
+                break;
+            case Portal.Side.Right:
+                _leftWorldBackground.fillAmount -= movementPerc;
+                _rightWorldBackground.fillAmount += movementPerc;
+                _worldSeam.rectTransform.anchoredPosition -= new Vector2(_backgroundCanvas.sizeDelta.x * movementPerc, 0f);
+                _worldSeamCollider.transform.position -= new Vector3(WORLD_BOUNDS.y * movementPerc, 0f, 0f);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(side));
         }
     }
+
+    private void OnDestroy()
+    {
+        Unsubscribe();
+    }
+
+    #endregion
 }
