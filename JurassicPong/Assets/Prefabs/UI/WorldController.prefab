@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 4609648095400422897}
   - component: {fileID: 4609648095400422903}
   - component: {fileID: 4609648095400422902}
+  - component: {fileID: 1123368084872742236}
   m_Layer: 5
   m_Name: WorldSeam
   m_TagString: Untagged
@@ -139,6 +140,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!223 &1123368084872742236
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4609648095400422896}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: -1090380977
+  m_SortingOrder: 16
+  m_TargetDisplay: 0
 --- !u!1 &4609648096327940816
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,6 +324,7 @@ GameObject:
   - component: {fileID: 5486886967646782895}
   - component: {fileID: 2763818010108399739}
   - component: {fileID: 6530308552272299009}
+  - component: {fileID: 2667369308555363330}
   m_Layer: 5
   m_Name: WorldSeamGlow
   m_TagString: Untagged
@@ -367,3 +390,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!223 &2667369308555363330
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7909381651126607480}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: -1090380977
+  m_SortingOrder: 15
+  m_TargetDisplay: 0

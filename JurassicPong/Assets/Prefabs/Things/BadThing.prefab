@@ -320,6 +320,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VelocityMultiplier: 5
+  SpawnInEase: 2
+  SpawnInTime: 0.25
+  SpawnOutEase: 3
+  SpawnOutTime: 0.25
   SwapableGameobjects:
   - {fileID: 3066519444227859153}
   - {fileID: 7875791589379766366}

@@ -704,7 +704,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4609648095323094397, guid: 0d999d3596bd04d4784c45be68d8e518, type: 3}
       propertyPath: _juiceItOrLoseIt
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4609648095323094397, guid: 0d999d3596bd04d4784c45be68d8e518, type: 3}
       propertyPath: _backgroundCanvas

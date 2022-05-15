@@ -49,6 +49,7 @@ public class Portal : MonoBehaviour
         if (thing)
         {
             SpawnParticles(thing is BadThing ? BadSystemToSpawnOnScore : GoodSystemToSpawnOnScore, collision.ClosestPoint(thing.transform.position));
+            thing.SpawnOut();
         }
     }
 

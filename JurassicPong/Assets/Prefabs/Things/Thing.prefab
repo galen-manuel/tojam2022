@@ -48,6 +48,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VelocityMultiplier: 5
+  SpawnInEase: 2
+  SpawnInTime: 0.25
+  SpawnOutEase: 3
+  SpawnOutTime: 0.25
 --- !u!212 &2571209473358842918
 SpriteRenderer:
   m_ObjectHideFlags: 0
