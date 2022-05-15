@@ -5,7 +5,13 @@ using DG.Tweening;
 
 public class WorldController : MonoBehaviour
 {
-    public static readonly Vector4 WORLD_BOUNDS = new Vector4(0.5f, 17.78371f, 1f, 9f);
+    /// <summary>
+    /// X = Left X Position
+    /// Y = Right X Position
+    /// W = Bottom Y Position
+    /// Z = Top Y Position
+    /// </summary>
+    public static readonly Vector4 WORLD_BOUNDS = new Vector4(0f, 17.78371f, 0f, 10f);
 
     #region Private Variables
 
@@ -88,17 +94,17 @@ public class WorldController : MonoBehaviour
         int direction = CalculateDirection(side, thing);
 
         // Calculate the percentage delta that the world seam and collider will move.
-        var worldSeamDelta = new Vector2(_backgroundCanvas.sizeDelta.x * movementDelta, 0f);
-        var worldSeamColliderDelta = new Vector3(WORLD_BOUNDS.y * movementDelta, 0f, 0f);
+        float worldSeamDeltaX = _backgroundCanvas.sizeDelta.x * movementDelta;
+        float worldSeamColliderDeltaX = WORLD_BOUNDS.y * movementDelta;
 
         // Apply the delta in the direction calculated using tweens.
         float endFillValue = _leftWorldBackground.fillAmount + (movementDelta * direction);
         _leftWorldBackground.DOFillAmount(endFillValue, _tweenTime)
                             .SetEase(_easeType);
-        _worldSeam.rectTransform.DOAnchorPosX(worldSeamDelta.x * direction, _tweenTime)
+        _worldSeam.rectTransform.DOAnchorPosX(worldSeamDeltaX * direction, _tweenTime)
                                 .SetRelative()
                                 .SetEase(_easeType);
-        _worldSeamCollider.transform.DOMoveX(worldSeamColliderDelta.x * direction, _tweenTime)
+        _worldSeamCollider.transform.DOMoveX(worldSeamColliderDeltaX * direction, _tweenTime)
                                     .SetRelative()
                                     .SetEase(_easeType);
 

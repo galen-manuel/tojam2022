@@ -21,15 +21,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8317905467447011174, guid: a4d21b62454ce844ebf1e2e493d66a6a, type: 3}
       propertyPath: m_Offset.x
-      value: -0.22163062
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8317905467447011174, guid: a4d21b62454ce844ebf1e2e493d66a6a, type: 3}
       propertyPath: m_Offset.y
-      value: -0.13097833
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8317905467447011174, guid: a4d21b62454ce844ebf1e2e493d66a6a, type: 3}
       propertyPath: m_Direction
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2974648439800881892, guid: a4d21b62454ce844ebf1e2e493d66a6a, type: 3}
+      propertyPath: Width
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -2974648439800881892, guid: a4d21b62454ce844ebf1e2e493d66a6a, type: 3}
+      propertyPath: Height
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: -2974648439800881892, guid: a4d21b62454ce844ebf1e2e493d66a6a, type: 3}
       propertyPath: PlayerType

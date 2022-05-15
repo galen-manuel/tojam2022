@@ -248,8 +248,10 @@ MonoBehaviour:
   _rightWorldBackground: {fileID: 1338328524}
   _worldSeam: {fileID: 386798316}
   _worldSeamCollider: {fileID: 263082182}
-  MaxScoreDifference: 10
-  MaxScreenPercentage: 25
+  _tweenTime: 0.75
+  _easeType: 31
+  _maxScoreDifference: 10
+  _maxScreenPrecentage: 25
 --- !u!4 &263082182 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8032454217562283853, guid: 3ba217b2c3c142d4d9d2be86b9b5f18b, type: 3}

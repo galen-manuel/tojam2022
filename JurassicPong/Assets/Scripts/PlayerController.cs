@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -12,7 +10,11 @@ public class PlayerController : MonoBehaviour
     }
 
     public Controls ControlType;
+
+    [Header("Character Properties")]
     public float BaseMovementSpeed;
+    public float Width;
+    public float Height;
 
     private Rigidbody2D _rb;
     private Vector2 _input;
@@ -45,8 +47,19 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         _rb.velocity = _input * BaseMovementSpeed;
-        _clampedPosition.Set(Mathf.Clamp(_rb.position.x, WorldController.WORLD_BOUNDS.x, WorldController.WORLD_BOUNDS.y),
-            Mathf.Clamp(_rb.position.y, WorldController.WORLD_BOUNDS.z, WorldController.WORLD_BOUNDS.w));
+
+        // Calculate world boundaries taking into account the width and height of each character.
+        float worldXMin = WorldController.WORLD_BOUNDS.x + Width * 0.5f;
+        float worldXMax = WorldController.WORLD_BOUNDS.y - Width * 0.5f;
+        float worldYMin = WorldController.WORLD_BOUNDS.z + Height * 0.5f;
+        float worldYMax = WorldController.WORLD_BOUNDS.w - Height * 0.5f;
+
+        // Figure out player's X and Y clamp values.
+        float xClamp = Mathf.Clamp(_rb.position.x, worldXMin, worldXMax);
+        float yClamp = Mathf.Clamp(_rb.position.y, worldYMin, worldYMax);
+       
+        // Clamp the player.
+        _clampedPosition.Set(xClamp, yClamp);
         _rb.transform.position = _clampedPosition;
     }
 }
