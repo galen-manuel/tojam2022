@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ThingSpawner : MonoBehaviour
 {
-    public Thing ThingPrefab;
+    public Thing[] ThingPrefabs;
     public PlayerController.Controls Controls;
     public float SpawnVariance = 0.2f;
     public float SpawnTime = 1.0f;
@@ -40,10 +40,11 @@ public class ThingSpawner : MonoBehaviour
     {
         for (int i = 0; i < NumberToSpawn; i++)
         {
-            Thing thing = Instantiate(ThingPrefab, new Vector2(transform.position.x,
-            Random.Range(WorldController.WORLD_BOUNDS.z, WorldController.WORLD_BOUNDS.w)), Quaternion.identity);
-            thing.tag = Random.Range(0, 2) == 0 ? Constants.TAG_GOOD_THING : Constants.TAG_BAD_THING;
-            thing.GetComponent<SpriteRenderer>().color = thing.tag == Constants.TAG_GOOD_THING ? Color.green : Color.black;
+            Thing thing = Instantiate(
+                ThingPrefabs[Random.Range(0, ThingPrefabs.Length)],
+                new Vector2(transform.position.x,
+                    Random.Range(WorldController.WORLD_BOUNDS.z,
+                    WorldController.WORLD_BOUNDS.w)), Quaternion.identity);
             var dir = Random.insideUnitCircle;
             switch (Controls)
             {
@@ -62,7 +63,14 @@ public class ThingSpawner : MonoBehaviour
                 default:
                     break;
             }
-            thing.Init(dir);
+            if (thing is BadThing badThing)
+            {
+                badThing.Init(Controls, dir);
+            }
+            else
+            {
+                thing.Init(dir);
+            }
         }
     }
 
