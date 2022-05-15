@@ -8,14 +8,11 @@ public class HUDManager : MonoBehaviour
     #region Constants
 
     private const float TIMER_VISIBLE_Y_POSITION = 2f;
-    private const string TWEEN_ID_TIMER_SCALE_PULSE = "timerScalePulse";
+    private const string TWEEN_ID_TIMER_SCALE_PULSE = "TweenIDTimerScalePulse";
 
     #endregion
 
     #region Private Variables
-
-    [Header("Misc")]
-    [SerializeField] private GameManager _gameManager;
 
     [Header("HUD Elements")]
     [SerializeField] private RectTransform _gameTimer;
@@ -27,13 +24,11 @@ public class HUDManager : MonoBehaviour
 
     private void Awake()
     {
-        GameHelper.IsNull(_gameManager);
         GameHelper.IsNull(_gameTimer);
         GameHelper.IsNull(_gameTimerText);
 
         _timerHiddenYPosition = _gameTimer.rect.height;
 
-        Unsubscribe();
         Subscribe();
     }
 
@@ -46,16 +41,16 @@ public class HUDManager : MonoBehaviour
 
     private void Subscribe()
     {
-        _gameManager.GameTimeTick += OnGameTimeTick;
-        _gameManager.ScoreMulitplierActivated += OnScoreMultiplierActivated;
-        _gameManager.GameEnded += OnGameEnded;
+        Messenger.AddListener<int>(Constants.EVENT_GAME_TIME_TICK, OnGameTimeTick);
+        Messenger.AddListener(Constants.EVENT_SCORE_MULTIPLIER_ACTIVATED, OnScoreMultiplierActivated);
+        Messenger.AddListener(Constants.EVENT_GAME_OVER, OnGameEnded);
     }
 
     private void Unsubscribe()
     {
-        _gameManager.GameTimeTick -= OnGameTimeTick;
-        _gameManager.ScoreMulitplierActivated -= OnScoreMultiplierActivated;
-        _gameManager.GameEnded -= OnGameEnded;
+        Messenger.RemoveListener<int>(Constants.EVENT_GAME_TIME_TICK, OnGameTimeTick);
+        Messenger.RemoveListener(Constants.EVENT_SCORE_MULTIPLIER_ACTIVATED, OnScoreMultiplierActivated);
+        Messenger.RemoveListener(Constants.EVENT_GAME_OVER, OnGameEnded);
     }
 
     #endregion
@@ -98,6 +93,7 @@ public class HUDManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        DOTween.Kill(TWEEN_ID_TIMER_SCALE_PULSE);
         Unsubscribe();
     }
 

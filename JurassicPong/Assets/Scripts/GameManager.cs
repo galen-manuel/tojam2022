@@ -6,8 +6,6 @@ public class GameManager : MonoBehaviour
 {
     #region Private Variables
 
-    [SerializeField] private Portal[] _portals;
-
     private int _playerOneScore;
     private int _playerTwoScore;
     private int _timeRemaining;
@@ -53,11 +51,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        GameHelper.IsNull(_portals);
-
         DontDestroyOnLoad(this);
 
-        Unsubscribe();
         Subscribe();
 
         _timeRemaining = TotalMatchTime;
@@ -75,18 +70,12 @@ public class GameManager : MonoBehaviour
 
     private void Subscribe()
     {
-        foreach (Portal portal in _portals)
-        {
-            portal.Scored += OnScored;
-        }
+        Messenger.AddListener<Portal.Side, Thing>(Constants.EVENT_PORTAL_SCORED, OnScored);
     }
 
     private void Unsubscribe()
     {
-        foreach (Portal portal in _portals)
-        {
-            portal.Scored -= OnScored;
-        }
+        Messenger.RemoveListener<Portal.Side, Thing>(Constants.EVENT_PORTAL_SCORED, OnScored);
     }
 
     #endregion
@@ -99,20 +88,20 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
             _timeRemaining -= 1;
-            GameTimeTick?.Invoke(_timeRemaining);
+            Messenger.Broadcast(Constants.EVENT_GAME_TIME_TICK, _timeRemaining, MessengerMode.REQUIRE_LISTENER);
 
             if (_timeRemaining <= PointsMultiplierTime && !_isPointsMultiplierActive)
             {
                 _isPointsMultiplierActive = true;
                 _activePointsMultiplier = PointsMultiplier;
-                ScoreMulitplierActivated?.Invoke();
+                Messenger.Broadcast(Constants.EVENT_SCORE_MULTIPLIER_ACTIVATED, MessengerMode.REQUIRE_LISTENER);
             }
         }
 
         if (_timeRemaining == 0)
         {
             Debug.Log("GAME OVER!");
-            GameEnded?.Invoke();
+            Messenger.Broadcast(Constants.EVENT_GAME_OVER, MessengerMode.REQUIRE_LISTENER);
         }
     }
 
@@ -151,7 +140,7 @@ public class GameManager : MonoBehaviour
                 throw new ArgumentOutOfRangeException(nameof(side));
         }
 
-        Scored?.Invoke(side, delta, thing);
+        Messenger.Broadcast(Constants.EVENT_UPDATE_SEAM_POSITION, side, delta, thing, MessengerMode.REQUIRE_LISTENER);
     }
 
     private void OnDestroy()

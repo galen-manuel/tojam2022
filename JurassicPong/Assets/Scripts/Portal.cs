@@ -17,7 +17,7 @@ public class Portal : MonoBehaviour
         var thing = collision.transform.root.GetComponent<Thing>();
         if (thing)
         {
-            Scored?.Invoke(WorldSide, thing);
+            Messenger.Broadcast(Constants.EVENT_PORTAL_SCORED, WorldSide, thing, MessengerMode.REQUIRE_LISTENER);
             Destroy(collision.transform.root.gameObject);
         }
     }
