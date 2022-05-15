@@ -85,7 +85,12 @@ public class StartOptions : MonoBehaviour {
 		if (menuSettingsData.musicLoopToChangeTo != null)
 		{
 			playMusic.PlayLevelMusic ();
-		}	
+		}
+
+		if (inMainMenu == false)
+        {
+			StartCoroutine(FadeCanvasGroupAlpha(1f, 0f, menuCanvasGroup));
+		}
 	}
 
 
@@ -137,7 +142,7 @@ public class StartOptions : MonoBehaviour {
         }
 
         HideDelayed();
-        Debug.Log("Coroutine done. Game started in same scene! Put your game starting stuff here.");
+        // TODO GM => Do things here
     }
 
 

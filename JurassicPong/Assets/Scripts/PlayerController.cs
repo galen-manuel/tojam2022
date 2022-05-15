@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
         Arrow
     }
 
+    #region Public Variables
+
     public Controls ControlType;
 
     [Header("Character Properties")]
@@ -16,32 +18,46 @@ public class PlayerController : MonoBehaviour
     public float Width;
     public float Height;
 
+    #endregion
+
+    #region Private Variables
+
     private Rigidbody2D _rb;
     private Vector2 _input;
     private Vector2 _clampedPosition;
 
+    private bool _isGameOver;
+
+    #endregion
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        Subscribe();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        if (_isGameOver)
+        {
+            return;
+        }
+
         _input.Set(Input.GetAxis($"{ControlType}_Horizontal"), Input.GetAxis($"{ControlType}_Vertical"));
 
         Move();
     }
 
-    private void FixedUpdate()
+    #region Private Methods
+
+    private void Subscribe()
     {
-        
+        Messenger.AddListener(Events.GAME_OVER, OnGameOver);
+    }
+
+    private void Unsubscribe()
+    {
+        Messenger.RemoveListener(Events.GAME_OVER, OnGameOver);
     }
 
     private void Move()
@@ -62,4 +78,21 @@ public class PlayerController : MonoBehaviour
         _clampedPosition.Set(xClamp, yClamp);
         _rb.transform.position = _clampedPosition;
     }
+
+    #endregion
+
+    #region Event Handlers
+
+    private void OnGameOver()
+    {
+        _isGameOver = true;
+        _rb.velocity = Vector2.zero;
+    }
+
+    private void OnDestroy()
+    {
+        Unsubscribe();
+    }
+
+    #endregion
 }

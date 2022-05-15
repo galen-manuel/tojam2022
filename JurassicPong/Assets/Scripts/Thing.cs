@@ -9,6 +9,17 @@ public class Thing : MonoBehaviour
 
     protected Rigidbody2D _rb;
 
+    public Vector2 Velocity {
+        get { return _rb.velocity; }
+        set { _rb.velocity = value; }
+    }
+
+    public float AngularVelocity 
+    {
+        get { return _rb.angularVelocity;  }
+        set { _rb.angularVelocity = value; }
+    }
+
     public virtual void Init(Vector2 startingVelocity = default)
     {
         if (startingVelocity == default)
@@ -22,17 +33,5 @@ public class Thing : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     #region Private Variables
 
+    [Header("Scoring Properties Data")]
+    [SerializeField] private ScoringPropertiesData _scoringPropertiesData;
     private int _playerOneScore;
     private int _playerTwoScore;
     private int _timeRemaining;
@@ -31,27 +33,11 @@ public class GameManager : MonoBehaviour
     [Tooltip("Multipler that will take effect when the clock runs down to the multiplier time.")]
     public int PointsMultiplier = 2;
 
-    /// <summary>
-    /// int - Time Remaining
-    /// </summary>
-    public Action<int> GameTimeTick;
-
-    /// <summary>
-    /// int - Score delta
-    /// <para><see cref="Portal.Side"/> - Which portal was scored on.</para>
-    /// <para><see cref="Thing"/> - What type of object was scored (<see cref="Thing"/> is a good thing, 
-    /// <see cref="BadThing"/> is not.)</para>
-    /// </summary>
-    public Action<Portal.Side, int, Thing> Scored;
-
-    public Action GameEnded;
-    public Action ScoreMulitplierActivated;
-
     #endregion
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
+        GameHelper.IsNull(_scoringPropertiesData);
 
         Subscribe();
 
@@ -70,12 +56,14 @@ public class GameManager : MonoBehaviour
 
     private void Subscribe()
     {
-        Messenger.AddListener<Portal.Side, Thing>(Constants.EVENT_PORTAL_SCORED, OnScored);
+        Messenger.AddListener<Portal.Side, Thing>(Events.PORTAL_SCORED, OnScored);
+        Messenger.AddListener(Events.GAME_OVER_ANIMATION_COMPLETE, OnGameOverAnimationComplete);
     }
 
     private void Unsubscribe()
     {
-        Messenger.RemoveListener<Portal.Side, Thing>(Constants.EVENT_PORTAL_SCORED, OnScored);
+        Messenger.RemoveListener<Portal.Side, Thing>(Events.PORTAL_SCORED, OnScored);
+        Messenger.RemoveListener(Events.GAME_OVER_ANIMATION_COMPLETE, OnGameOverAnimationComplete);
     }
 
     #endregion
@@ -88,20 +76,35 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
             _timeRemaining -= 1;
-            Messenger.Broadcast(Constants.EVENT_GAME_TIME_TICK, _timeRemaining, MessengerMode.REQUIRE_LISTENER);
+            Messenger.Broadcast(Events.GAME_TIME_TICK, _timeRemaining, MessengerMode.REQUIRE_LISTENER);
 
             if (_timeRemaining <= PointsMultiplierTime && !_isPointsMultiplierActive)
             {
                 _isPointsMultiplierActive = true;
                 _activePointsMultiplier = PointsMultiplier;
-                Messenger.Broadcast(Constants.EVENT_SCORE_MULTIPLIER_ACTIVATED, MessengerMode.REQUIRE_LISTENER);
+                Messenger.Broadcast(Events.SCORE_MULTIPLIER_ACTIVATED, MessengerMode.REQUIRE_LISTENER);
             }
         }
 
-        if (_timeRemaining == 0)
+        CheckGameOver();
+    }
+
+    private float CalculateProgress(int score1, int score2)
+    {
+        if (score1 > score2)
         {
-            Debug.Log("GAME OVER!");
-            Messenger.Broadcast(Constants.EVENT_GAME_OVER, MessengerMode.REQUIRE_LISTENER);
+            return 1.0f;
+        }
+
+        return (float)score1 / score2;
+    }
+
+    private void CheckGameOver()
+    {
+        int scoreDifference = Mathf.Abs(_playerOneScore - _playerTwoScore);
+        if (_timeRemaining == 0 || scoreDifference >= _scoringPropertiesData.MaxScoreDifference)
+        {
+            Messenger.Broadcast(Events.GAME_OVER);
         }
     }
 
@@ -140,11 +143,26 @@ public class GameManager : MonoBehaviour
                 throw new ArgumentOutOfRangeException(nameof(side));
         }
 
-        Messenger.Broadcast(Constants.EVENT_UPDATE_SEAM_POSITION, side, delta, thing, MessengerMode.REQUIRE_LISTENER);
+        Messenger.Broadcast(Events.UPDATE_SEAM_POSITION, side, delta, thing, MessengerMode.REQUIRE_LISTENER);
+        CheckGameOver();
+    }
+
+    private void OnGameOverAnimationComplete()
+    {
+        var roundResultsModel = new RoundResultsModel()
+        {
+            PlayerOneScore = _playerOneScore,
+            PlayerTwoScore = _playerTwoScore,
+            IsPlayerOneWinner = _playerOneScore > _playerTwoScore,
+            PlayerOneOverallProgress = CalculateProgress(_playerOneScore, _playerTwoScore),
+            PlayerTwoOverallProgress = CalculateProgress(_playerTwoScore, _playerOneScore)
+        };
+        Messenger.Broadcast(Events.GAME_OVER_RESULTS, roundResultsModel, MessengerMode.REQUIRE_LISTENER);
     }
 
     private void OnDestroy()
     {
+        StopCoroutine(GameTimeTicker());
         Unsubscribe();
     }
 
