@@ -16,6 +16,8 @@ public class Thing : MonoBehaviour
     public Ease SpawnOutEase = Ease.OutSine;
     public float SpawnOutTime = 0.25f;
 
+    public float MaxSpeed = 10f;
+
     protected Rigidbody2D _rb;
     protected SpriteRenderer _spriteRenderer;
 
@@ -57,6 +59,12 @@ public class Thing : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void FixedUpdate()
+    {
+        _rb.velocity = new Vector2(Mathf.Clamp(_rb.velocity.x, _rb.velocity.x, MaxSpeed), 
+                                    Mathf.Clamp(_rb.velocity.y, _rb.velocity.y, MaxSpeed));
     }
 
     private void SpawnIn(Vector2 scale)

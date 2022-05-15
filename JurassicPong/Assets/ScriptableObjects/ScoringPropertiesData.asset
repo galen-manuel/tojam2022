@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1366cd7ec88b8734bb7b11a7eb525d51, type: 3}
   m_Name: ScoringPropertiesData
   m_EditorClassIdentifier: 
-  foo: 0
+  MaxScoreDifference: 10
+  MaxScreenPercentage: 22.5
