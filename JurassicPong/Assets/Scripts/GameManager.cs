@@ -31,22 +31,6 @@ public class GameManager : MonoBehaviour
     [Tooltip("Multipler that will take effect when the clock runs down to the multiplier time.")]
     public int PointsMultiplier = 2;
 
-    /// <summary>
-    /// int - Time Remaining
-    /// </summary>
-    public Action<int> GameTimeTick;
-
-    /// <summary>
-    /// int - Score delta
-    /// <para><see cref="Portal.Side"/> - Which portal was scored on.</para>
-    /// <para><see cref="Thing"/> - What type of object was scored (<see cref="Thing"/> is a good thing, 
-    /// <see cref="BadThing"/> is not.)</para>
-    /// </summary>
-    public Action<Portal.Side, int, Thing> Scored;
-
-    public Action GameEnded;
-    public Action ScoreMulitplierActivated;
-
     #endregion
 
     private void Awake()
@@ -71,11 +55,13 @@ public class GameManager : MonoBehaviour
     private void Subscribe()
     {
         Messenger.AddListener<Portal.Side, Thing>(Constants.EVENT_PORTAL_SCORED, OnScored);
+        Messenger.AddListener(Constants.EVENT_GAME_OVER_ANIMATION_COMPLETE, OnGameOverAnimationComplete);
     }
 
     private void Unsubscribe()
     {
         Messenger.RemoveListener<Portal.Side, Thing>(Constants.EVENT_PORTAL_SCORED, OnScored);
+        Messenger.RemoveListener(Constants.EVENT_GAME_OVER_ANIMATION_COMPLETE, OnGameOverAnimationComplete);
     }
 
     #endregion
@@ -100,9 +86,18 @@ public class GameManager : MonoBehaviour
 
         if (_timeRemaining == 0)
         {
-            Debug.Log("GAME OVER!");
-            Messenger.Broadcast(Constants.EVENT_GAME_OVER, MessengerMode.REQUIRE_LISTENER);
+            Messenger.Broadcast(Constants.EVENT_GAME_OVER);
         }
+    }
+
+    private float CalculateProgress(int score1, int score2)
+    {
+        if (score1 > score2)
+        {
+            return 1.0f;
+        }
+
+        return (float)score1 / score2;
     }
 
     #endregion
@@ -143,8 +138,22 @@ public class GameManager : MonoBehaviour
         Messenger.Broadcast(Constants.EVENT_UPDATE_SEAM_POSITION, side, delta, thing, MessengerMode.REQUIRE_LISTENER);
     }
 
+    private void OnGameOverAnimationComplete()
+    {
+        var roundResultsModel = new RoundResultsModel()
+        {
+            PlayerOneScore = _playerOneScore,
+            PlayerTwoScore = _playerTwoScore,
+            IsPlayerOneWinner = _playerOneScore > _playerTwoScore,
+            PlayerOneOverallProgress = CalculateProgress(_playerOneScore, _playerTwoScore),
+            PlayerTwoOverallProgress = CalculateProgress(_playerTwoScore, _playerOneScore)
+        };
+        Messenger.Broadcast(Constants.EVENTS_GAME_OVER_RESULTS, roundResultsModel, MessengerMode.REQUIRE_LISTENER);
+    }
+
     private void OnDestroy()
     {
+        StopCoroutine(GameTimeTicker());
         Unsubscribe();
     }
 

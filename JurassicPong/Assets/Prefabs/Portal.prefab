@@ -124,3 +124,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 121d8568493e0d846a20e733ec9137f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _collider: {fileID: 4813717308254049984}
+  WorldSide: 0

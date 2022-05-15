@@ -15,6 +15,7 @@ public class WorldController : MonoBehaviour
     /// </summary>
     public static readonly Vector4 WORLD_BOUNDS = new Vector4(0f, 17.78371f, 0f, 10f);
 
+    private const string TWEEN_ID_SEAM_MOVE = "TweenIDSeamMove";
     private const string TWEEN_ID_SEAM_SHAKE = "TweenIDSeamShake";
 
     #endregion
@@ -50,6 +51,13 @@ public class WorldController : MonoBehaviour
         GameHelper.IsNull(_worldSeamCollider);
 
         Subscribe();
+    }
+
+    private void Start()
+    {
+        _worldSeam.rectTransform.DOShakeScale(3.0f, new Vector3(0.1f, 0f, 0f), 15, 20, false)
+                                .SetLoops(-1)
+                                .SetId(TWEEN_ID_SEAM_SHAKE);
     }
 
     private void Update()
@@ -91,7 +99,7 @@ public class WorldController : MonoBehaviour
 
     private void UpdateWorldBackground(Portal.Side side, float movementDelta, Thing thing)
     {
-        DOTween.Kill(TWEEN_ID_SEAM_SHAKE);
+        DOTween.Kill(TWEEN_ID_SEAM_MOVE);
 
         // Calculate direction based on the side that was scored on. If scored on the left, the direction of movement
         // is positive relative to the left side. If scored on the right, the direction of movement is negative relative
@@ -106,25 +114,26 @@ public class WorldController : MonoBehaviour
         float endFillValue = _leftWorldBackground.fillAmount + (movementDelta * direction);
         _leftWorldBackground.DOFillAmount(endFillValue, _tweenTime)
                             .SetEase(_easeType)
-                            .SetId(TWEEN_ID_SEAM_SHAKE);
+                            .SetId(TWEEN_ID_SEAM_MOVE);
         _worldSeam.rectTransform.DOAnchorPosX(worldSeamDeltaX * direction, _tweenTime)
                                 .SetRelative()
                                 .SetEase(_easeType)
-                                .SetId(TWEEN_ID_SEAM_SHAKE);
+                                .SetId(TWEEN_ID_SEAM_MOVE);
         _worldSeamCollider.transform.DOMoveX(worldSeamColliderDeltaX * direction, _tweenTime)
                                     .SetRelative()
                                     .SetEase(_easeType)
-                                    .SetId(TWEEN_ID_SEAM_SHAKE);
+                                    .SetId(TWEEN_ID_SEAM_MOVE);
 
         // We use the inverse direction calculated because the direction is calculated relative to the left side.
         endFillValue = _rightWorldBackground.fillAmount + (movementDelta * (direction * -1));
         _rightWorldBackground.DOFillAmount(endFillValue, _tweenTime)
                              .SetEase(_easeType)
-                             .SetId(TWEEN_ID_SEAM_SHAKE);
+                             .SetId(TWEEN_ID_SEAM_MOVE);
     }
 
     private void OnDestroy()
     {
+        DOTween.Kill(TWEEN_ID_SEAM_MOVE);
         DOTween.Kill(TWEEN_ID_SEAM_SHAKE);
         Unsubscribe();
     }
