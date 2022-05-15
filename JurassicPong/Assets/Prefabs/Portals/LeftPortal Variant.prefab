@@ -53,7 +53,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4859428455652570925, guid: d5676c2005d774a439d3ddb63df8f960, type: 3}
       propertyPath: m_Name
-      value: LeftPortal
+      value: LeftPortal Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5305383184630722814, guid: d5676c2005d774a439d3ddb63df8f960, type: 3}
       propertyPath: VelocityModule.x.scalar
