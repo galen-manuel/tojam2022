@@ -599,7 +599,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8679422005539504317, guid: 6103e96a020d8ef43bde85bfd7cad0e4, type: 3}
       propertyPath: TotalMatchTime
-      value: 40
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 8679422005539504317, guid: 6103e96a020d8ef43bde85bfd7cad0e4, type: 3}
       propertyPath: _portals.Array.data[0]
@@ -928,7 +928,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4984089921293884724, guid: fd003a0ccfdef56428bf0e2aa4246d6c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.8199997
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4984089921293884724, guid: fd003a0ccfdef56428bf0e2aa4246d6c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1223,7 +1223,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 461759948102808902, guid: 9dcf324b78b22ca40b575f120b0e1958, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14.13
+      value: 16.5
       objectReference: {fileID: 0}
     - target: {fileID: 461759948102808902, guid: 9dcf324b78b22ca40b575f120b0e1958, type: 3}
       propertyPath: m_LocalPosition.y
