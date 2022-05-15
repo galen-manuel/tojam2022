@@ -183,6 +183,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ControlType: 0
   BaseMovementSpeed: 10
+  Width: 0
+  Height: 0
 --- !u!50 &8822009116539882679
 Rigidbody2D:
   serializedVersion: 4
@@ -211,7 +213,7 @@ CapsuleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1020849431398313365}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
