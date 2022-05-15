@@ -166,7 +166,10 @@ public class ThingSpawner : MonoBehaviour
     {
         _isRunning = false;
         DOTween.Kill(TWEEN_ID_SEQ_GAME_OVER);
-        StopCoroutine(_spawnCoroutine);
+        if (_spawnCoroutine != null)
+        {
+            StopCoroutine(_spawnCoroutine);
+        }
         Unsubscribe();
     }
 
