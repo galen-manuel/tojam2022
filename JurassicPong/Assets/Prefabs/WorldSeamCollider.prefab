@@ -48,9 +48,9 @@ MonoBehaviour:
   - {fileID: -8719524709629576419, guid: 42faca625dbbe044e843fa0a99bdc75a, type: 3}
   - {fileID: -3155384231885837278, guid: ba20f892774ccd34eb29c2d0e73d8015, type: 3}
   Controls: 0
-  SpawnVariance: 0.2
-  SpawnTime: 3
-  NumberToSpawn: 2
+  SpawnVariance: 0.5
+  SpawnTime: 2
+  NumberToSpawn: 1
 --- !u!1 &3588995745749619400
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,9 +99,9 @@ MonoBehaviour:
   - {fileID: -8719524709629576419, guid: 42faca625dbbe044e843fa0a99bdc75a, type: 3}
   - {fileID: -3155384231885837278, guid: ba20f892774ccd34eb29c2d0e73d8015, type: 3}
   Controls: 1
-  SpawnVariance: 0.2
-  SpawnTime: 3
-  NumberToSpawn: 2
+  SpawnVariance: 0.5
+  SpawnTime: 2
+  NumberToSpawn: 1
 --- !u!1 &8032454217562283855
 GameObject:
   m_ObjectHideFlags: 0
