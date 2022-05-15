@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameOverDialog : MonoBehaviour
 {
@@ -39,8 +40,10 @@ public class GameOverDialog : MonoBehaviour
 
     private void OnResultsTallied(RoundResultsModel resultsModel)
     {
-        _background.gameObject.SetActive(true);
-        _statsWindow.gameObject.SetActive(true);
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(true);
+        }
 
         _leftVictoryText.SetActive(resultsModel.IsPlayerOneWinner);
         _rightVictoryText.SetActive(!resultsModel.IsPlayerOneWinner);
@@ -60,5 +63,15 @@ public class GameOverDialog : MonoBehaviour
     private void OnDestroy()
     {
         Unsubscribe();
+    }
+
+    public void OnPlayAgainPressed()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void OnMainMenuPressed()
+    {
+        SceneManager.LoadScene(0);
     }
 }
