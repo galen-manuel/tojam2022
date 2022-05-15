@@ -47,3 +47,6 @@ MonoBehaviour:
   _portals:
   - {fileID: 0}
   - {fileID: 0}
+  TotalMatchTime: 120
+  PointsMultiplierTime: 20
+  PointsMultiplier: 2

@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ControlType: 0
-  BaseMovementSpeed: 5
+  BaseMovementSpeed: 10
 --- !u!50 &8822009116539882679
 Rigidbody2D:
   serializedVersion: 4
