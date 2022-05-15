@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _input;
     private Vector2 _clampedPosition;
 
-    private bool _isGameOver;
+    private bool _isPlayable;
 
     #endregion
 
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (_isGameOver)
+        if (!_isPlayable)
         {
             return;
         }
@@ -52,11 +53,13 @@ public class PlayerController : MonoBehaviour
 
     private void Subscribe()
     {
+        Messenger.AddListener<int>(Events.START_GAME, OnStartGame);
         Messenger.AddListener(Events.GAME_OVER, OnGameOver);
     }
 
     private void Unsubscribe()
     {
+        Messenger.RemoveListener<int>(Events.START_GAME, OnStartGame);
         Messenger.RemoveListener(Events.GAME_OVER, OnGameOver);
     }
 
@@ -82,10 +85,14 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Event Handlers
+    private void OnStartGame(int startingGameTime)
+    {
+        _isPlayable = true;
+    }
 
     private void OnGameOver()
     {
-        _isGameOver = true;
+        _isPlayable = false;
         _rb.velocity = Vector2.zero;
     }
 

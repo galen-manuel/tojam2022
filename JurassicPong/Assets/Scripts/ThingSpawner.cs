@@ -33,23 +33,18 @@ public class ThingSpawner : MonoBehaviour
         Subscribe();
     }
 
-    private void Start()
-    {
-        _isRunning = true;
-        _spawnCoroutine = Spawn();
-        StartCoroutine(_spawnCoroutine);
-    }
-
     #region Private Methods
 
     private void Subscribe()
     {
+        Messenger.AddListener<int>(Events.START_GAME, OnStartGame);
         Messenger.AddListener<Thing>(Events.DESTROY_THING, OnDestroyThing);
         Messenger.AddListener(Events.GAME_OVER, OnGameOver);
     }
 
     private void Unsubscribe()
     {
+        Messenger.RemoveListener<int>(Events.START_GAME, OnStartGame);
         Messenger.RemoveListener<Thing>(Events.DESTROY_THING, OnDestroyThing);
         Messenger.RemoveListener(Events.GAME_OVER, OnGameOver);
     }
@@ -106,6 +101,13 @@ public class ThingSpawner : MonoBehaviour
     #endregion
 
     #region Event Handlers
+
+    private void OnStartGame(int startingGameTime)
+    {
+        _isRunning = true;
+        _spawnCoroutine = Spawn();
+        StartCoroutine(_spawnCoroutine);
+    }
 
     private void OnDestroyThing(Thing thing)
     {

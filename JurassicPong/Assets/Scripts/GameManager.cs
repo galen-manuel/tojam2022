@@ -48,20 +48,25 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = timeScale;
         }
+    }
 
-        StartCoroutine(GameTimeTicker());
+    private void Start()
+    {
+        Messenger.Broadcast(Events.COUNTDOWN_STARTED);
     }
 
     #region Private Methods
 
     private void Subscribe()
     {
+        Messenger.AddListener(Events.COUNTDOWN_ENDED, OnCountdownEnded);
         Messenger.AddListener<Portal.Side, Thing>(Events.PORTAL_SCORED, OnScored);
         Messenger.AddListener(Events.GAME_OVER_ANIMATION_COMPLETE, OnGameOverAnimationComplete);
     }
 
     private void Unsubscribe()
     {
+        Messenger.RemoveListener(Events.COUNTDOWN_ENDED, OnCountdownEnded);
         Messenger.RemoveListener<Portal.Side, Thing>(Events.PORTAL_SCORED, OnScored);
         Messenger.RemoveListener(Events.GAME_OVER_ANIMATION_COMPLETE, OnGameOverAnimationComplete);
     }
@@ -158,6 +163,12 @@ public class GameManager : MonoBehaviour
             PlayerTwoOverallProgress = CalculateProgress(_playerTwoScore, _playerOneScore)
         };
         Messenger.Broadcast(Events.GAME_OVER_RESULTS, roundResultsModel, MessengerMode.REQUIRE_LISTENER);
+    }
+
+    private void OnCountdownEnded()
+    {
+        Messenger.Broadcast(Events.START_GAME, TotalMatchTime);
+        StartCoroutine(GameTimeTicker());
     }
 
     private void OnDestroy()
