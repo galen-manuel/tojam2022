@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class WorldSeam : MonoBehaviour
 {
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        BadThing bt = collision.GetComponent<BadThing>();
-        if (bt != null)
+        PlayerController player = collision.GetComponent<PlayerController>();
+        if (player)
         {
-            bt.Swap();
+            player.Respawn();
         }
     }
 }
