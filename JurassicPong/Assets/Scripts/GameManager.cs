@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Scoring Properties Data")]
     [SerializeField] private ScoringPropertiesData _scoringPropertiesData;
+    [SerializeField] private AudioSource _gameAudio;
     private int _playerOneScore;
     private int _playerTwoScore;
     private int _timeRemaining;
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Multipler that will take effect when the clock runs down to the multiplier time.")]
     public int PointsMultiplier = 2;
+
     [Space]
     public PlayMusic PlayMusic;
 
@@ -41,6 +43,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         GameHelper.IsNull(_scoringPropertiesData);
+        GameHelper.IsNull(_gameAudio);
 
         Subscribe();
 
@@ -90,6 +93,7 @@ public class GameManager : MonoBehaviour
             {
                 _isPointsMultiplierActive = true;
                 _activePointsMultiplier = PointsMultiplier;
+                _gameAudio.pitch = 1.1f;
                 Messenger.Broadcast(Events.SCORE_MULTIPLIER_ACTIVATED, MessengerMode.REQUIRE_LISTENER);
             }
         }

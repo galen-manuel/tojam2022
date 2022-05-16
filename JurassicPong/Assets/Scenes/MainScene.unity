@@ -1120,6 +1120,14 @@ PrefabInstance:
       propertyPath: _gameManager
       value: 
       objectReference: {fileID: 623682509}
+    - target: {fileID: 4629418861568880986, guid: 34a8205580ed8bb4ebcf4f7f503267be, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4629418861568880986, guid: 34a8205580ed8bb4ebcf4f7f503267be, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5303475287591637711, guid: 34a8205580ed8bb4ebcf4f7f503267be, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
