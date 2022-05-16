@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Multipler that will take effect when the clock runs down to the multiplier time.")]
     public int PointsMultiplier = 2;
+    [Space]
+    public PlayMusic PlayMusic;
 
     #endregion
 
@@ -168,6 +171,7 @@ public class GameManager : MonoBehaviour
 
     private void OnCountdownEnded()
     {
+        PlayMusic.PlayLevelMusic();
         Messenger.Broadcast(Events.START_GAME, TotalMatchTime);
         StartCoroutine(GameTimeTicker());
     }

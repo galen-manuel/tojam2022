@@ -15,5 +15,5 @@ MonoBehaviour:
   menuFadeTime: 1
   sceneChangeFadeColor: {r: 0, g: 0, b: 0, a: 1}
   nextSceneIndex: 1
-  mainMenuMusicLoop: {fileID: 8300000, guid: 7db0c87ec4fdb0e48af04349c4f14df9, type: 3}
-  musicLoopToChangeTo: {fileID: 0}
+  mainMenuMusicLoop: {fileID: 8300000, guid: ae6c0089518113e42915d78c027b0df8, type: 3}
+  musicLoopToChangeTo: {fileID: 8300000, guid: 32d36c25bc878498baecca74e4fb719f, type: 3}
