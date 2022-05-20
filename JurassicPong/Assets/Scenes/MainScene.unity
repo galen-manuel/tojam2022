@@ -735,28 +735,56 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1226622160118060010, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1226622160118060010, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1226622160118060010, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1416824133111587264, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2323445201283997417, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -2.5
       objectReference: {fileID: 0}
     - target: {fileID: 2367008208245315328, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
       propertyPath: m_Name
       value: GameOver
       objectReference: {fileID: 0}
-    - target: {fileID: 2367008208245315328, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 4485465477634838982, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2629491380345486505, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -2.5
+    - target: {fileID: 4485465477634838982, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4485465477634838982, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5059158096568983955, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5122470302184401107, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6173245072305556748, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6173245072305556748, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6173245072305556748, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
+      propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7317958934389156989, guid: 50d95d3d7e2a2c448a20fc4d8fb83180, type: 3}
@@ -1120,6 +1148,10 @@ PrefabInstance:
       propertyPath: _gameManager
       value: 
       objectReference: {fileID: 623682509}
+    - target: {fileID: 118720351843119716, guid: 34a8205580ed8bb4ebcf4f7f503267be, type: 3}
+      propertyPath: _inEaseType
+      value: 27
+      objectReference: {fileID: 0}
     - target: {fileID: 4629418861568880986, guid: 34a8205580ed8bb4ebcf4f7f503267be, type: 3}
       propertyPath: m_LocalScale.x
       value: 0

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
+using static RoundResultsModel;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
     private int _timeRemaining;
     private int _activePointsMultiplier;
     private bool _isPointsMultiplierActive;
+    private Coroutine _gameTimer;
 
     #endregion
 
@@ -111,13 +113,29 @@ public class GameManager : MonoBehaviour
         return (float)score1 / score2;
     }
 
+    private ScoreEndState DetermineMatchWinner()
+    {
+        if (_playerOneScore > _playerTwoScore)
+        {
+            return ScoreEndState.P1;
+        }
+
+        if (_playerTwoScore > _playerOneScore)
+        {
+            return ScoreEndState.P2;
+        }
+
+        return ScoreEndState.Tie;
+    }
+
     private void CheckGameOver()
     {
         int scoreDifference = Mathf.Abs(_playerOneScore - _playerTwoScore);
         if (_timeRemaining == 0 || scoreDifference >= _scoringPropertiesData.MaxScoreDifference)
         {
+            Debug.Log("Game Over Broadcast");
             Messenger.Broadcast(Events.GAME_OVER);
-            StopCoroutine(GameTimeTicker());
+            StopCoroutine(_gameTimer);
         }
     }
 
@@ -166,7 +184,7 @@ public class GameManager : MonoBehaviour
         {
             PlayerOneScore = _playerOneScore,
             PlayerTwoScore = _playerTwoScore,
-            IsPlayerOneWinner = _playerOneScore > _playerTwoScore,
+            MatchWinner = DetermineMatchWinner(),
             PlayerOneOverallProgress = CalculateProgress(_playerOneScore, _playerTwoScore),
             PlayerTwoOverallProgress = CalculateProgress(_playerTwoScore, _playerOneScore)
         };
@@ -177,12 +195,12 @@ public class GameManager : MonoBehaviour
     {
         PlayMusic.PlayLevelMusic();
         Messenger.Broadcast(Events.START_GAME, TotalMatchTime);
-        StartCoroutine(GameTimeTicker());
+        _gameTimer = StartCoroutine(GameTimeTicker());
     }
 
     private void OnDestroy()
     {
-        StopCoroutine(GameTimeTicker());
+        StopCoroutine(_gameTimer);
         Unsubscribe();
     }
 

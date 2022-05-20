@@ -133,10 +133,12 @@ public class ThingSpawner : MonoBehaviour
         _isRunning = false;
         StopCoroutine(_spawnCoroutine);
 
-        var sequence = DOTween.Sequence();
+        
 
         foreach (Thing thing in _things)
         {
+            Sequence sequence = DOTween.Sequence();
+            sequence.SetId(TWEEN_ID_SEQ_GAME_OVER);
             sequence.Insert(0f,
                 DOTween.To(() => thing.Velocity, v => thing.Velocity = v, Vector2.zero, 1.0f)
                        .SetEase(Ease.OutSine)
@@ -153,7 +155,6 @@ public class ThingSpawner : MonoBehaviour
             sequence.Insert(1.0f, thing.transform.root.DOScale(0f, 0.5f)
                                                       .SetEase(Ease.InExpo));
             sequence.OnComplete(OnGameOverAnimationComplete);
-            sequence.SetId(TWEEN_ID_SEQ_GAME_OVER);
         }
     }
 

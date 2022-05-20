@@ -5,6 +5,8 @@ using DG.Tweening;
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class PlayerController : MonoBehaviour
 {
+    private const string TWEEN_ID_RESPAWN = "Respawn";
+
     public enum Controls
     {
         WASD,
@@ -73,11 +75,14 @@ public class PlayerController : MonoBehaviour
         _rb.velocity = Vector2.zero;
         _input = Vector2.zero;
         _rb.MovePosition(_respawnPosition);
-        _mainRenderer.DOColor(DeathFlashColour, DeathLoopTime).SetLoops(DeathLoopCount, LoopType.Yoyo).OnComplete(() =>
-        {
-            _mainRenderer.color = Color.white;
-            _isPlayable = true;
-        });
+        _mainRenderer.DOColor(DeathFlashColour, DeathLoopTime)
+                     .SetLoops(DeathLoopCount, LoopType.Yoyo)
+                     .SetId(TWEEN_ID_RESPAWN)
+                     .OnComplete(() =>
+                     {
+                         _mainRenderer.color = Color.white;
+                         _isPlayable = true;
+                     });
     }
 
     #endregion
@@ -118,6 +123,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Event Handlers
+
     private void OnStartGame(int startingGameTime)
     {
         _isPlayable = true;
@@ -125,12 +131,16 @@ public class PlayerController : MonoBehaviour
 
     private void OnGameOver()
     {
+        // Kill this tween in case you are in the respawn tween on Game Over.
+        DOTween.Kill(TWEEN_ID_RESPAWN);
+
         _isPlayable = false;
         _rb.velocity = Vector2.zero;
     }
 
     private void OnDestroy()
     {
+        DOTween.Kill(TWEEN_ID_RESPAWN);
         Unsubscribe();
     }
 
